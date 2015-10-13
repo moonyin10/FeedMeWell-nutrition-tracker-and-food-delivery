@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<title>
+			Delivery.com API
+		</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+			<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<style>
+			html {
+				font-family: "Open Sans";
+			}
+			h2, .type {
+				cursor: pointer;
+			}
+		</style>
+		<h2>Delivery.com REST API</h2>
+		<input id="location" value="1178, Broadway
+10001 New York"></input>
+		<button id="submit">Search Food</button>
+		<div class="container">
+		<table>
+			<tr>
+				<td><b>Cuisines</b></td>
+				<td><b>Dishes</b></td>
+				<td><b>Calories</b></td>
+			</tr>
+			<tr>
+				<td valign="top" id="cuisines"></td>
+				<td valign="top" id="dishes"></td>
+				<td valign="top" id="calories"></td>
+			</tr>
+		</table>
+		</div>
+		<script>
+			$(function(){ // Waits while DOM gets loaded fully
+				var cache; // Temporary storage so that we don't make excessive API calls (Global Variable)
+				$("#submit").click(function(){ // Called when the submit button is clicked
+					getCuisines();
+				});
+			});
+			
+			function getCuisines(){ // Called when press submit button
+				$.ajax({
+					  type: 'GET',
+					  dataType: "json",
+					  // The URL to make the request to.
+					  url: "https://api.delivery.com/merchant/search/delivery",
+					  data: {
+						client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl",
+						address: $("#location").val().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
+					  },
+					  success: function(data) {
+						cache = data;
+						$("#cuisines").html("");
+						$.each(data["cuisines"], function(value){
+							$("#cuisines").append("<p class='type'>" + data["cuisines"][value]["name"] + "</p>");
+						});
+						$(".type").click(function(){
+							getDishes($(this).text());
+						});
+					  },
+					  error: function(data) {
+						console.log("ERROR: " + data);
+					  }
+				});
+			}
+			
+			function getDishes(dishName){ // Called when you click on a cuisine name
+				$("#dishes").html(""); // Clear text from the dishes column in case there are any
+				for (j=0; j<cache['merchants'].length; j++){
+					var data = cache['merchants'][j];
+					var foodType = dishName;
+					if ($.inArray(foodType, data['summary']['cuisines'])>-1){
+						$.each(data['summary']['recommended_items'], function(index, value){
+							$("#dishes").append("<p class='dish_name' onclick='getCalories("+ "\"" +  value['name'] + "\"" + ")'>" + value['name']  + "</p>");
+						});
+					}
+				}
+			}
+			
+			function getCalories(name){ // Called when you click on a dish name
+				$.ajax({
+					type: "GET",
+					dataType: "json",
+					url: "https://api.nutritionix.com/v1_1/search/" + name,
+					data: {
+						fields: "item_name,item_id,brand_name,nf_calories,nf_total_fat", // some fields may not be needed (decide which ones we really need)
+						appId: "9921b233",
+						appKey: "4976263e72db8d8c4b4226fa0b0fdbd9"
+					},
+					success: function(data){
+						$("#calories").html(data['hits'][0]['fields']['nf_calories']);
+					},
+					error: function(data){
+						console.log("ERROR: " + data);
+					}
+				});					
+			}
+		</script>
+	</body>
+<html>
