@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>
-			Lab 6
+			Delivery.com API
 		</title>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 			<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -69,7 +69,6 @@
 			
 			function getDishes(dishName){ // Called when you click on a cuisine name
 				$("#dishes").html(""); // Clear text from the dishes column in case there are any
-				var setOne = 0;
 				for (j=0; j<cache['merchants'].length; j++){
 					var data = cache['merchants'][j];
 					var foodType = dishName;
