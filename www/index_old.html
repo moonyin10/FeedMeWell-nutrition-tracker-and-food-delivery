@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+       
+		  <title>feedMeWell</title>
+		  <meta name="viewport" content="width=device-width, initial-scale=1">
+		  <link rel="stylesheet" href="css/themes/feedMeWell.css" />
+		  <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+		  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" /> 
+		  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script> 
+		  <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> 
+    </head>
+    <body>     
+		<div class="preview ui-shadow swatch">
+			<div class="ui-header ui-bar-a" data-swatch="a" data-theme="a" data-form="ui-bar-a" data-role="header" role="banner">
+				<a class="ui-btn-left ui-btn-corner-all ui-btn ui-icon-home ui-btn-icon-notext ui-shadow" title=" Home " data-form="ui-icon" data-role="button" role="button"> Home </a>
+				<h1 class="ui-title" tabindex="0" role="heading" aria-level="1">feedMeWell</h1>
+				<a class="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid ui-btn-icon-notext ui-shadow" title=" Navigation " data-form="ui-icon" data-role="button" role="button"> Navigation </a>
+			</div><!--ui-header-->
+			<div class="ui-content ui-page-theme-a" data-form="ui-page-theme-a" data-theme="a" role="main">
+				
+				<br/>
+				<div data-theme="a" data-form="ui-body-a" class="ui-body ui-body-a ui-corner-all">
+					<b>Step 1: Provide the Calorie Content of the Next Meal (<i>This will later be calculated automatically</i>)</b>
+					<div class="ui-slider">
+						<input type="number" data-type="range" name="slider" value="50" min="0" max="100" data-form="ui-body-a" data-theme="a" data-highlight="true" class="ui-shadow-inset ui-body-a ui-corner-all ui-slider-input">
+							<div role="application" class="ui-slider-track ui-shadow-inset ui-bar-a ui-corner-all ui-btn-up-a" data-form="ui-btn-up-a" data-theme="a">
+								<div class="ui-slider-bg ui-btn-active" style="width: 50%;"></div>
+								
+							</div>
+						</input>
+					</div>
+				</div><!--ui-calorie-content-->
+				<br/>
+				<div data-theme="a" data-form="ui-body-a" class="ui-body ui-body-a ui-corner-all">
+					<b>Step 2: Enter Your Address</b>
+					<input type="text" data-theme="a" value="Text Input" class="input" data-form="ui-body-a" vk_12a5a="subscribed">
+				</div><!--ui-address-->
+				<br/>
+				<div data-theme="a" data-form="ui-body-a" class="ui-body ui-body-a ui-corner-all">
+					<b>Step 3: Select Type of Food You Like</b>
+					<div class="ui-select">
+						<select name="select-choice" id="select-choice-a" data-native-menu="false" data-theme="a" data-form="ui-btn-up-a" tabindex="-1">
+							<option value="standard">Option 1</option>
+							<option value="rush">Option 2</option>
+							<option value="express">Option 3</option>
+							<option value="overnight">Option 4</option>
+						</select>
+						<div style="display: none;" id="select-choice-a-listbox-placeholder"><!-- placeholder for select-choice-a-listbox --></div>
+					</div>
+				</div><!--ui-address-->
+				<br/>
+				
+
+				<button data-icon="star" data-theme="a" data-form="ui-btn-up-a" class=" ui-btn ui-btn-a ui-icon-star ui-btn-icon-left ui-shadow ui-corner-all">feed Me!</button>
+			</div>
+		</div>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript">
+			app.initialize();
+		</script>
+    </body>
+</html>
