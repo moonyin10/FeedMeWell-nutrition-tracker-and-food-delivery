@@ -20,6 +20,9 @@ $(function(){ // Waits while DOM gets loaded fully
 						client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl",
 						address: $("#location").val().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
 					  },
+					  headers: {
+						  'origin': 'http://evil.com'
+					  },
 					  success: function(data) {
 						
 						cache = data;
