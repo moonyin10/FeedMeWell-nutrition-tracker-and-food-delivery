@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>Lab 6</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script>
+			console.log(window.btoa("229WMB:e10e600a259dc0696dd9220bde092c7e"));
+			console.log(window.atob("c63a62d8eeb55df3e62102fd827b4edd21cfaa58"));
+			
+			/*
+			https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=229WMB&redirect_uri=http%3A%2F%2F192.168.1.24&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
+
+https://api.fitbit.com/1/user/18fdaec9958b9fbece651b8b3e6385f5a7e450ad/activities/date/2015-10-14.json
+
+"eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NDQ5NDgwNzgsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcm51dCBybG9jIHJzbGUgcnNldCByc29jIHJhY3QiLCJzdWIiOiIzTVJETloiLCJhdWQiOiIyMjlXTUIiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NDQ5NDQ0Nzh9.Tntt3HXFj1ezl2Cpgw-w1qN-eoWQGPt5lFEJ4mdFw48"
+
+$(document).ready(function(){
+	$("#check").click(function(){
+		$.ajax({
+		url: "https://api.fitbit.com/oauth2/token?client_id=229WMBC&grant_type=authorization_code&redirect_uri=http%3A%2F%2F192.168.1.24&code=160c1e7a5599b9cc5811052d124e2eb80c794f92",
+		type: 'POST',
+		headers: {
+			"Authorization": "Basic " + window.btoa("229WMB:e10e600a259dc0696dd9220bde092c7e"),
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		
+		success: function(response){
+			console.log(response);
+			
+		}
+	});
+	});
+	
+});
+
+$("#check").click(function(){
+	$.ajax({
+	url: "GET https://api.fitbit.com/1/user/-/profile.json",
+	type: 'GET',
+	headers: {
+		"Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0NDQ5NDg1NjUsInNjb3BlcyI6InJ3ZWkgcnBybyByaHIgcm51dCBybG9jIHJzbGUgcnNldCByYWN0IHJzb2MiLCJzdWIiOiIzTVJETloiLCJhdWQiOiIyMjlXTUIiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE0NDQ5NDQ5NjV9.aeKiUgorzE_h6K1-D8PJBqE4cqwx5pMrOb-dZUquDEE"
+	},
+	
+	success: function(response){
+		console.log(response);
+
+	}
+});
+});
+*/
+		</script>
+	</head>
+	<body>
+		<h2>fitbit REST API</h2>
+		<button id="check">Check</button>
+		<p id="fitbit"></p>
+	</body>
+</html>
