@@ -92,6 +92,10 @@ src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js?se
 					<b>Temp. Payment Setup (<i>Will incorporate the delivery.com api in the near future</i></b>
 <div id="AmazonPayButton"></div>
 <script type="text/javascript">
+        document.getElementById("AmazonPayButton").onclick = function () {
+        location.href = "www.delivery.com";
+    };
+
   var authRequest;
   OffAmazonPayments.Button("AmazonPayButton", "Delivery.com", {
     type:  "PwA",
