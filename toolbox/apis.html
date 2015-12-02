@@ -45,6 +45,7 @@
 				$("#submit").click(function(){ // Called when the submit button is clicked
 					currentAddress = $("#location").val().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+');
 					getCuisines();
+					setInterval(function(){console.log(JSON.stringify(calorieCache))},8000);
 				});
 			});
 			
@@ -72,9 +73,13 @@
 							$("#cuisines").append("<p class='Foodtype'>" + data["cuisines"][value]["name"] + "</p>");
 						});  //looking all cuisines in Json file , append cuisines 
 						
-						$(".Foodtype").click(function(){  //class-type 
-							getDishes($(this).text());
-						});
+
+						getDishes("Argentinian");
+						getDishes("Bar Food");
+						
+						//$(".Foodtype").click(function(){  //class-type 
+						//	getDishes($(this).text());
+						//});
 						
 					  },
 					  error: function(data) {
@@ -84,19 +89,29 @@
 			}
 			
 			function getDishes(cuisineName){ // Called when you click on a cuisine name
-				$("#dishes").html(""); // Clear text from the dishes column in case there are any
+				//$("#dishes").html(""); // Clear text from the dishes column in case there are any
 				var dishCount = 0;
 				for (j=0; j<cache['merchants'].length; j++){   //get murchange data -->Ex:cache["merchants"][4]
 					var data = cache['merchants'][j];
+					//console.log(JSON.stringify());
 					 foodType = cuisineName;
 					if ($.inArray(foodType, data['summary']['cuisines'])>-1){ //if inside array , return position in array, else return -1
+						
 						$.each(data['summary']['recommended_items'], function(index, value){
+							//JSON.stringify(data['summary']['recommended_items'] is value
 							var currentDishName = value['name'];
-							calorieCache[currentAddress].cuisines[foodType][value['name']] = 0;
+							if (!calorieCache[currentAddress].cuisines[foodType][value['name']]){
+								getCalories(value['name']);
+							}
+							
+
 							$("#dishes").append("<p class='dish_name' onclick='getCalories("+ "\"" +  value['name'] + "\"" + ")'>" + value['name']  + "</p>");
 							dishCount++;
-							
+
+						
 						});	
+						
+						//console.log(dishCount);
 					}
 				}
 				
@@ -113,14 +128,15 @@
 						appKey: "4976263e72db8d8c4b4226fa0b0fdbd9"
 					},
 					success: function(data){
-
-						
 						$("#calories").html(data['hits'][0]['fields']['nf_calories']);
 						var currentCalorie=data['hits'][0]['fields']['nf_calories'];
 						var calorieName=name;
 						calorieCache[currentAddress].cuisines[foodType][calorieName]= currentCalorie;
-						console.log(JSON.stringify(calorieCache));
-						console.log(dishCount);
+						//$(calorieCache[currentAddress].cuisines[foodType][calorieName])
+
+						//console.log(JSON.stringify(calorieCache[currentAddress]));
+						//console.log(JSON.stringify(calorieCache));
+						//console.log(dishCount);
 					},
 					error: function(data){
 						console.log("ERROR: " + data);
