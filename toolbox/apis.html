@@ -63,7 +63,7 @@
 					  success: function(data) {
 					  	calorieCache[currentAddress] = {cuisines:{}};
 						cache = data;
-						$("#cuisines").html(""); //clearing cuisines 
+						//$("#cuisines").html(""); //clearing cuisines 
 						
 							
 						$.each(data["cuisines"], function(value){
@@ -74,9 +74,9 @@
 						});  //looking all cuisines in Json file , append cuisines 
 						
 
-						getDishes("Argentinian");
-						getDishes("Bar Food");
 						
+						getDishes("Bar Food");
+						getDishes("Argentinian");
 						//$(".Foodtype").click(function(){  //class-type 
 						//	getDishes($(this).text());
 						//});
@@ -90,7 +90,7 @@
 			
 			function getDishes(cuisineName){ // Called when you click on a cuisine name
 				//$("#dishes").html(""); // Clear text from the dishes column in case there are any
-				var dishCount = 0;
+				//var dishCount = 0;
 				for (j=0; j<cache['merchants'].length; j++){   //get murchange data -->Ex:cache["merchants"][4]
 					var data = cache['merchants'][j];
 					//console.log(JSON.stringify());
@@ -99,14 +99,15 @@
 						
 						$.each(data['summary']['recommended_items'], function(index, value){
 							//JSON.stringify(data['summary']['recommended_items'] is value
-							var currentDishName = value['name'];
+							var currentDishName = value['name'];// dish name
 							if (!calorieCache[currentAddress].cuisines[foodType][value['name']]){
-								getCalories(value['name']);
+								console.log("executed");
+								getCalories(foodType, value['name']);
 							}
 							
 
 							$("#dishes").append("<p class='dish_name' onclick='getCalories("+ "\"" +  value['name'] + "\"" + ")'>" + value['name']  + "</p>");
-							dishCount++;
+							//dishCount++;
 
 						
 						});	
@@ -117,7 +118,7 @@
 				
 			}
 			
-			function getCalories(name){ // Called when you click on a dish name
+			function getCalories(foodInput, name){ // Called when you click on a dish name
 				$.ajax({
 					type: "GET",
 					dataType: "json",
@@ -131,7 +132,7 @@
 						$("#calories").html(data['hits'][0]['fields']['nf_calories']);
 						var currentCalorie=data['hits'][0]['fields']['nf_calories'];
 						var calorieName=name;
-						calorieCache[currentAddress].cuisines[foodType][calorieName]= currentCalorie;
+						calorieCache[currentAddress].cuisines[foodInput][calorieName]= currentCalorie;
 						//$(calorieCache[currentAddress].cuisines[foodType][calorieName])
 
 						//console.log(JSON.stringify(calorieCache[currentAddress]));
