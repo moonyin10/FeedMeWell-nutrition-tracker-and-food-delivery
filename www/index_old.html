@@ -21,6 +21,15 @@
 -->
 <html>
     <head>
+
+  <script type='text/javascript'>
+    window.onAmazonLoginReady = function() {
+      amazon.Login.setClientId('YOUR_CLIENT_ID_HERE');
+    };
+  </script>
+  <script type='text/javascript'
+src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js?sellerId=YOUR_SELLER_ID_HERE'>
+  </script>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
@@ -48,7 +57,7 @@
 				<div data-theme="a" data-form="ui-body-a" class="ui-body ui-body-a ui-corner-all">
 					<b>Step 1: Provide the Calorie Content of the Next Meal (<i>This will later be calculated automatically</i>)</b>
 					<div class="ui-slider">
-						<input type="number" data-type="range" name="slider" value="50" min="0" max="100" data-form="ui-body-a" data-theme="a" data-highlight="true" class="ui-shadow-inset ui-body-a ui-corner-all ui-slider-input">
+						<input type="number" data-type="range" name="slider" value="300" min="0" max="1000" data-form="ui-body-a" data-theme="a" data-highlight="true" class="ui-shadow-inset ui-body-a ui-corner-all ui-slider-input">
 							<div role="application" class="ui-slider-track ui-shadow-inset ui-bar-a ui-corner-all ui-btn-up-a" data-form="ui-btn-up-a" data-theme="a">
 								<div class="ui-slider-bg ui-btn-active" style="width: 50%;"></div>
 								
@@ -66,10 +75,10 @@
 					<b>Step 3: Select Type of Food You Like</b>
 					<div class="ui-select">
 						<select name="select-choice" id="select-choice-a" data-native-menu="false" data-theme="a" data-form="ui-btn-up-a" tabindex="-1">
-							<option value="standard">Option 1</option>
-							<option value="rush">Option 2</option>
-							<option value="express">Option 3</option>
-							<option value="overnight">Option 4</option>
+							<option value="standard">Flavor of the Day</option>
+							<option value="rush">Fast Food</option>
+							<option value="express">Express Delivery</option>
+							<option value="overnight">Options For Tomorrow</option>
 						</select>
 						<div style="display: none;" id="select-choice-a-listbox-placeholder"><!-- placeholder for select-choice-a-listbox --></div>
 					</div>
@@ -80,6 +89,28 @@
 				<button data-icon="star" data-theme="a" data-form="ui-btn-up-a" class=" ui-btn ui-btn-a ui-icon-star ui-btn-icon-left ui-shadow ui-corner-all">feed Me!</button>
 			</div>
 		</div>
+					<b>Temp. Payment Setup (<i>Will incorporate the delivery.com api in the near future</i></b>
+<div id="AmazonPayButton"></div>
+<script type="text/javascript">
+        document.getElementById("AmazonPayButton").onclick = function () {
+        location.href = "www.delivery.com";
+    };
+
+  var authRequest;
+  OffAmazonPayments.Button("AmazonPayButton", "Delivery.com", {
+    type:  "PwA",
+    color: "Gold",
+    size:  "medium",
+    useAmazonAddressBook: true,
+    authorization: function() {
+      var loginOptions = {scope: 'profile payments:widget'};
+      authRequest = amazon.Login.authorize(loginOptions, "www.delivery.com");
+    },
+    onError: function(error) {
+      // Write your custom error handling
+    }
+  });
+</script>
 		<script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript">

@@ -1,5 +1,7 @@
+var cache; // Temporary storage so that we don't make excessive API calls (Global Variable)
+var cuisineArray = [];
 $(function(){ // Waits while DOM gets loaded fully
-				var cache; // Temporary storage so that we don't make excessive API calls (Global Variable)
+				
 				$("#submit").click(function(){ // Called when the submit button is clicked
 					getCuisines();
 				});
@@ -11,6 +13,9 @@ $(function(){ // Waits while DOM gets loaded fully
 					  dataType: "json",
 					  // The URL to make the request to.
 					  url: "https://api.delivery.com/merchant/search/delivery",
+					  headers: {
+					  	
+					  },
 					  data: {
 						client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl",
 						address: $("#location").val().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
@@ -23,6 +28,7 @@ $(function(){ // Waits while DOM gets loaded fully
 						cache = data;
 						$("#cuisines").html("");
 						$.each(data["cuisines"], function(value){
+							cuisineArray.push(data["cuisines"][value]["name"]);
 							$("#cuisines").append("<p class='type'>" + data["cuisines"][value]["name"] + "</p>");
 						});
 						$(".type").click(function(){

@@ -3,6 +3,7 @@ $(function(){
 		window.location = "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=229WMB&redirect_uri=http%3A%2F%2F192.168.1.24/data.html&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight"
 	});
 	$("#button").click(function(){
+		$("#button").text("Click...");
 		var location = String(window.location);
 		var code = location.substr(35, location.length-1);
 		$.ajax({
