@@ -1,0 +1,17 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-jwt": "0.0.9",
+    "angular-storage": "0.0.13",
+    "angularjs": "0.0.1",
+    "express": "3.2.6",
+    "express-jwt": "^3.1.0",
+    "jade": "*"
+  }
+}

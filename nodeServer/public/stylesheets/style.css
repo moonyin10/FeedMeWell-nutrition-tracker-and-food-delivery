@@ -1,0 +1,11 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  vertical-align: top;
+}
+table p {
+  vertical-align: top;
+}
+a {
+  color: #00B7FF;
+}

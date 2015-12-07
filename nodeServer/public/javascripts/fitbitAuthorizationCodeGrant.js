@@ -1,5 +1,4 @@
-$(function(){
-	function GetURLParameter(sParam)
+function GetURLParameter(sParam) // function that extracts parameters from url (e.g. url.html?parameter=10, it will extract 10 from parameter)
 	{
 	    var sPageURL = window.location.search.substring(1);
 	    var sURLVariables = sPageURL.split('&');
@@ -13,8 +12,8 @@ $(function(){
 	        }
 	    }
 	}
-
-	$("#getdata").click(function(){
+	
+function authorizationCodeGrant(){
 		alert("test");
 		var url = {
 			response_type: "response_type=code&",
@@ -23,9 +22,9 @@ $(function(){
 			scope: "scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight"
 		};
 		window.location = "https://www.fitbit.com/oauth2/authorize?" + url.response_type + url.client_id + url.redirect_uri + url.scope;
-	});
-	
-	$("#button").click(function(){
+	}
+
+function getAccessTokenFitbit(){
 		console.log(GetURLParameter("code"));
 		$.ajax({
 			url: "https://api.fitbit.com/oauth2/token",
@@ -49,7 +48,7 @@ $(function(){
 					},
 					
 					success: function(response){
-						$("#stats p").append(JSON.stringify(response));
+						console.log(response);
 					},
 					error: function(response){
 						alert("error");
@@ -57,5 +56,8 @@ $(function(){
 				});
 			}
 		});
-	});
+	}
+
+$(function(){
+	$("#getFitbitData").click(getAccessTokenFitbit());
 });
