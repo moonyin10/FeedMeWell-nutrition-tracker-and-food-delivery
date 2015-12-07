@@ -3,17 +3,11 @@
 		<title>
 			Delivery.com API
 		</title>
-		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-			<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-		<meta charset="utf-8">
-	  <title>QUnit Example</title>
-	  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.20.0.css">
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+			<link href='http://fonts.googleapis.com/css?family=Open+Sahns:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+			<!--get custom font -->
 	</head>
 	<body>
-		  <div id="qunit"></div>
-		  <div id="qunit-fixture"></div>
-		  <script src="https://code.jquery.com/qunit/qunit-1.20.0.js"></script>
-		  <script src="./Tests/tests.js"></script>
 		<style>
 			html {
 				font-family: "Open Sans";
@@ -40,7 +34,116 @@
 			</tr>
 		</table>
 		</div>
-		<script type="text/javascript" src="./apis.js">
+		<script>
+			var calorieCache = {};
+			var currentAddress = "";
+			var foodType;
+			$(function(){ // Waits while DOM gets loaded fully
+				var cache; // Temporary storage so that we don't make excessive API calls (Global Variable) ( store json response)
+				
+				
+				$("#submit").click(function(){ // Called when the submit button is clicked
+					currentAddress = $("#location").val().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+');
+					getCuisines();
+					setInterval(function(){console.log(JSON.stringify(calorieCache))},8000);
+				});
+			});
+			
+			function getCuisines(){ // Called when press submit button
+				$.ajax({
+					  type: 'GET',
+					  dataType: "json",
+					  // The URL to make the request to.
+					  url:"https://api.delivery.com/merchant/search/delivery",
+					  //url: "https://api.delivery.com/merchant/search/delivery/Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl/",
+					    data: {	
+						client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl",
+						address: $("#location").val().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
+					  },
+					  success: function(data) {
+					  	calorieCache[currentAddress] = {cuisines:{}};
+						cache = data;
+						//$("#cuisines").html(""); //clearing cuisines 
+						
+							
+						$.each(data["cuisines"], function(value){
+							
+							var currentCuisineName = data["cuisines"][value]["name"];
+							calorieCache[currentAddress].cuisines[currentCuisineName] = {};
+							$("#cuisines").append("<p class='Foodtype'>" + data["cuisines"][value]["name"] + "</p>");
+						});  //looking all cuisines in Json file , append cuisines 
+						
+
+						
+						getDishes("Bar Food");
+						getDishes("Argentinian");
+						//$(".Foodtype").click(function(){  //class-type 
+						//	getDishes($(this).text());
+						//});
+						
+					  },
+					  error: function(data) {
+						console.log("ERROR: " + data);
+					  }
+				});
+			}
+			
+			function getDishes(cuisineName){ // Called when you click on a cuisine name
+				//$("#dishes").html(""); // Clear text from the dishes column in case there are any
+				//var dishCount = 0;
+				for (j=0; j<cache['merchants'].length; j++){   //get murchange data -->Ex:cache["merchants"][4]
+					var data = cache['merchants'][j];
+					//console.log(JSON.stringify());
+					 foodType = cuisineName;
+					if ($.inArray(foodType, data['summary']['cuisines'])>-1){ //if inside array , return position in array, else return -1
+						
+						$.each(data['summary']['recommended_items'], function(index, value){
+							//JSON.stringify(data['summary']['recommended_items'] is value
+							var currentDishName = value['name'];// dish name
+							if (!calorieCache[currentAddress].cuisines[foodType][value['name']]){
+								console.log("executed");
+								getCalories(foodType, value['name']);
+							}
+							
+
+							$("#dishes").append("<p class='dish_name' onclick='getCalories("+ "\"" +  value['name'] + "\"" + ")'>" + value['name']  + "</p>");
+							//dishCount++;
+
+						
+						});	
+						
+						//console.log(dishCount);
+					}
+				}
+				
+			}
+			
+			function getCalories(foodInput, name){ // Called when you click on a dish name
+				$.ajax({
+					type: "GET",
+					dataType: "json",
+					url: "https://api.nutritionix.com/v1_1/search/" + name,
+					data: {
+						fields: "item_name,item_id,brand_name,nf_calories,nf_total_fat", // some fields may not be needed (decide which ones we really need)
+						appId: "9921b233",
+						appKey: "4976263e72db8d8c4b4226fa0b0fdbd9"
+					},
+					success: function(data){
+						$("#calories").html(data['hits'][0]['fields']['nf_calories']);
+						var currentCalorie=data['hits'][0]['fields']['nf_calories'];
+						var calorieName=name;
+						calorieCache[currentAddress].cuisines[foodInput][calorieName]= currentCalorie;
+						//$(calorieCache[currentAddress].cuisines[foodType][calorieName])
+
+						//console.log(JSON.stringify(calorieCache[currentAddress]));
+						//console.log(JSON.stringify(calorieCache));
+						//console.log(dishCount);
+					},
+					error: function(data){
+						console.log("ERROR: " + data);
+					}
+				});					
+			}
 		</script>
 	</body>
 <html>
