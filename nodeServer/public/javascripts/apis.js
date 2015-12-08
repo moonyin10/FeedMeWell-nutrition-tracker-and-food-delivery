@@ -1,22 +1,34 @@
+/**
+ * Temporary storage in order to avoid excessive API calls. */
 var cache; // Temporary storage so that we don't make excessive API calls (Global Variable)
+/** An array to store the menu info from a particular restaurant. */
 var cuisineArray = [];
+/** An array to store the user's cart info data. */
 var cart = [];
+/**
+ * Waits while DOM gets loaded fully
+ */
 $(function(){ // Waits while DOM gets loaded fully
 	getCartContents(); 
 	getMerchantIds();
 	getFitbitData();
 	$("#refresh").click(function(){
+		/** Gets dish values. */
 		var val = $("#select-choice-c option:selected").attr('id');
 		getDishes(val);
 	});
 	$("#addToCart").click(function(){
+		/** Selects the merchant. */
 		var merchant = $("#select-choice-d option:selected").data('merchant');
+		/** Selects the dish from the selected merchant. */
 		var dish = $("#select-choice-d option:selected").data('dish');
 		addToCart(merchant, dish);
 	});
 
 });
-
+/**
+ * Gets the fitbit data of a specific User.
+ */
 function getFitbitData(){
 	$.ajax({
 		type: "GET",
@@ -31,7 +43,7 @@ function getFitbitData(){
 		}
 	});
 }
-
+/** Gets data of a selected food shop. */
 function getMerchantIds(){
 $.ajax({
 		  type: 'GET',
@@ -57,7 +69,11 @@ $.ajax({
 		  }
 	});   
 }
-
+/**
+ * Searches recursively for the right child's data
+ * @param {number} iterable Number of iterations
+ * @param {object} callback
+ */
 function recursiveSearch(iterable, callback){
     if (iterable.children.length !== 0){
         //console.log(iterable);
@@ -69,7 +85,7 @@ function recursiveSearch(iterable, callback){
         callback(iterable);
     }
 }
-
+/** Gets the contents of the users cart. */
 function getCartContents(){
 	$.ajax({
 		tye: "GET",
@@ -102,7 +118,11 @@ function getCartContents(){
 	});
     
 }
-
+/**
+ * Add an item to your cart
+ * @param {integer} merchantId Identify the merchant
+ * @param {integer} dishId Identify the dish 
+ */
 function addToCart(merchantId, dishId){
 
  $.ajax({
@@ -132,7 +152,10 @@ function addToCart(merchantId, dishId){
     }
  });
 }
-
+/**
+ * Called when you click on a cuisine name to get the dishes.
+ * @param {integer} merchantId Takes in which restaurant to get food info from.
+ */
 function getDishes(merchantId){ // Called when you click on a cuisine name
 	
 	$.ajax({
@@ -162,7 +185,10 @@ function getDishes(merchantId){ // Called when you click on a cuisine name
 	    }
 	}); 
 }
-
+/**
+ * Called when you click on a dish name to get the calorie contents.
+ * @param {string} name Name of the dish to pick up the calorie contents from.
+ */
 function getCalories(name){ // Called when you click on a dish name
 	$.ajax({
 		type: "GET",
