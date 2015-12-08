@@ -3,6 +3,7 @@
 Project Name: FeedmeWell
 
 Project Description: 
+This project is a food ordering app that can order food for user based on user's workout data tracked by Fitbit.
 o Describe	repo	organization
 
 o Describe	where	to	find	and/or	how	to	build	the	docs
