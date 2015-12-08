@@ -4,6 +4,7 @@
  */
 /**
  * Variables needed to run the webpage ranging from databases to authentication services.
+ * @var {webpage} express
  */
 var express = require('express')
   , routes = require('./routes')
@@ -31,9 +32,7 @@ var app = express();
 /*
 * MONGODB
 */
-/**
- * Connects to the mongodb
- */
+/** Connects to the mongodb. */
 mongoose.connect('mongodb://localhost:27017/');
 /**
  * A variables for the mongodb
@@ -43,8 +42,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 /**
  * Start of the application.
- * @constructor
- */
+ * @function startSession */
 app.use(session({
   secret: 'secrettexthere',
   saveUninitialized: true,
@@ -72,7 +70,7 @@ passport.deserializeUser(function(id, done) {
 });
 /**
  * Uses google+ for authentication for the user
- * @constructor
+ * @class
  * @augments GoogleStrategy
  */
 passport.use(new GoogleStrategy({
