@@ -174,10 +174,10 @@ app.get('/', isLoggedIn, function(req, res){
   if (!req.user.address){
     res.redirect("/address");
   }
-  else if (!req.user.tokens.fitbit.refresh) { // user is not loged into fitbit account (no refresh token)
+  else if (!req.user.tokens.fitbit.access) { // user is not loged into fitbit account (no refresh token)
     res.redirect(OAuth2Urls.fitbitAuthUrl);
   }
-  else if (!req.user.tokens.delivery.refresh) { // user is not loged into delivery account
+  else if (!req.user.tokens.delivery.access) { // user is not loged into delivery account
     res.redirect(OAuth2Urls.deliveryAuthUrl);
   }
   routes.index(req, res);
@@ -256,6 +256,20 @@ app.get('/auth/fitbit', function(req, res){
   }
 });
 
+// FITBIT GET DATA
+app.get("/fitbit/getData", function(req, res){
+  needle
+    .get("https://api.fitbit.com/1/user/-/profile.json", {headers: {
+						"Authorization": "Bearer " + req.user.tokens.fitbit.access
+					}}, 
+      function(err, resp){
+          if (err) {
+            res.send(err);
+          }
+          res.send(resp.body);
+        });
+});
+
 /*
 *  Delivery API Helper 
 */
@@ -284,15 +298,20 @@ app.get('/delivery/getMenusFromMerchants', function(req, res){
         });
 });
 
+// GET USER CART
+app.get('/delivery/getUserCart', function(req, res){
+  res.send(req.user.cart);
+});
+
 // GET CART CONTENTS
 app.get('/delivery/getCartContents', function(req, res){
   needle
     .get("https://api.delivery.com/customer/cart/" + req.query.merchantId + "?client_id=" + req.query.client_id, {headers: {"Authorization": req.user.tokens.delivery.access}},
         function(err, resp){
           if (err) {
-            res.send({data:err, cart:req.user.cart});
+            res.send(err);
           }
-          res.send({data:resp.body, cart:req.user.cart});
+          res.send(resp.body);
         });
 });
 
@@ -312,7 +331,7 @@ app.get('/delivery/getPaymentMethods', function(req, res){
 app.post('/delivery/addToCart', function(req, res){
    var options = {
         headers: {
-          "Authorization": req.body.headers["Authorization"], 
+          "Authorization": req.user.tokens.delivery.access, 
         }
       };
       needle
@@ -327,8 +346,7 @@ app.post('/delivery/addToCart', function(req, res){
           if (err) {
             res.send(err);
           }
-          console.log("[AFTER REQUESTING TOKENS] BODY: " + JSON.stringify(resp.body));
-          res.send('Success!');
+          res.send(resp.body);
           User.update({"google.id":req.user.google.id}, {$addToSet: {"cart": req.body.merchantId}}, function(err){
             res.send(err);
           });
@@ -441,6 +459,12 @@ app.get('/auth/facebook/callback',
                                       failureRedirect: '/login' }));
   
 app.get('/logout', function(req, res){
+  User.update({"google.id": req.user.google.id}, {$set:{"tokens.fitbit.access":""}}, function(err){
+    console.log(err);
+  });
+  User.update({"google.id": req.user.google.id}, {$set:{"tokens.delivery.access":""}}, function(err){
+    console.log(err);
+  });
   req.logout();
   res.redirect('/login');
 });
