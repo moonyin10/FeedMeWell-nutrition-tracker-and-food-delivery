@@ -1,9 +1,16 @@
+/**
+ * Function that extracts paramaters from url, ex: 10 will extract 10 and so on.
+ * @param {integer} sParam The number of parameters to extract.
+ */
 function GetURLParameter(sParam) // function that extracts parameters from url (e.g. url.html?parameter=10, it will extract 10 from parameter)
 	{
+		/** The default page url. */
 	    var sPageURL = window.location.search.substring(1);
-	    var sURLVariables = sPageURL.split('&');
+	    /** The default page url parsed in. */
+		var sURLVariables = sPageURL.split('&');
 	    for (var i = 0; i < sURLVariables.length; i++)
 	    {
+			/** Checks for a matching url hit. */
 	        var sParameterName = sURLVariables[i].split('=');
 	        if (sParameterName[0] == sParam)
 	        {
@@ -12,9 +19,12 @@ function GetURLParameter(sParam) // function that extracts parameters from url (
 	        }
 	    }
 	}
-	
+/**
+ * Makes an API call to check on the authenticity of the request being made.
+ */
 function authorizationCodeGrant(){
 		alert("test");
+		/** The url page contacted. */
 		var url = {
 			response_type: "response_type=code&",
 			client_id: "client_id=229WMB&",
@@ -23,7 +33,7 @@ function authorizationCodeGrant(){
 		};
 		window.location = "https://www.fitbit.com/oauth2/authorize?" + url.response_type + url.client_id + url.redirect_uri + url.scope;
 	}
-
+/** Makes an API call to get an access token from the Fitbit website. */
 function getAccessTokenFitbit(){
 		console.log(GetURLParameter("code"));
 		$.ajax({
@@ -39,6 +49,7 @@ function getAccessTokenFitbit(){
 				"Authorization": "Basic " + window.btoa("229WMB:e10e600a259dc0696dd9220bde092c7e"),
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
+			/** Function which returns succefully if the user is authorized. */
 			success: function(response){
 				$.ajax({
 					url: "https://api.fitbit.com/1/user/-/profile.json",
@@ -46,10 +57,11 @@ function getAccessTokenFitbit(){
 					headers: {
 						"Authorization": "Bearer " + response.access_token
 					},
-					
+					/** Returned upon success. */
 					success: function(response){
 						console.log(response);
 					},
+					/** Returned on error. */
 					error: function(response){
 						alert("error");
 					}
@@ -57,7 +69,7 @@ function getAccessTokenFitbit(){
 			}
 		});
 	}
-
+/** Function which gets the fitbit data. */
 $(function(){
 	$("#getFitbitData").click(getAccessTokenFitbit());
 });
