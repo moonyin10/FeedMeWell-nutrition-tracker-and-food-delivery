@@ -1,0 +1,638 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="WHIT">
+<span class='line'>  2</span> </span><span class="COMM">/**
+<span class='line'>  3</span>  * Module dependencies.
+<span class='line'>  4</span>  */</span><span class="WHIT">
+<span class='line'>  5</span> </span><span class="COMM">/**
+<span class='line'>  6</span>  * Variables needed to run the webpage ranging from databases to authentication services.
+<span class='line'>  7</span>  * @var {webpage} express
+<span class='line'>  8</span>  */</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">express</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'express'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">routes</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./routes'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./routes/address'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./routes/user'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">login</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./routes/login'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">http</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'http'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">path</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'path'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cookieParser</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'cookie-parser'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">session</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'express-session'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">mongoose</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'mongoose'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">passport</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'passport'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">User</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./models/user'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">User</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">GoogleStrategy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'passport-google-oauth'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">OAuth2Strategy</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">FacebookStrategy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'passport-facebook'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">Strategy</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">OAuth2Urls</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./auth/urls'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">urls</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">needle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'needle'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">  </span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="COMM">/**
+<span class='line'> 27</span>  * A variables for the app
+<span class='line'> 28</span>  * @var {application} app
+<span class='line'> 29</span>  */</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">app</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">express</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 31</span> 
+<span class='line'> 32</span> </span><span class="COMM">/*
+<span class='line'> 33</span> * MONGODB
+<span class='line'> 34</span> */</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="COMM">/** Connects to the mongodb. */</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="NAME">mongoose.connect</span><span class="PUNC">(</span><span class="STRN">'mongodb://localhost:27017/'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="COMM">/**
+<span class='line'> 38</span>  * A variables for the mongodb
+<span class='line'> 39</span>  * @var {database} db
+<span class='line'> 40</span>  */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">db</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">mongoose.connection</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="NAME">db.on</span><span class="PUNC">(</span><span class="STRN">'error'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">console.error.bind</span><span class="PUNC">(</span><span class="NAME">console</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'connection error:'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="COMM">/**
+<span class='line'> 44</span>  * Start of the application.
+<span class='line'> 45</span>  * @function startSession */</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">session</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">  </span><span class="NAME">secret</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'secrettexthere'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">  </span><span class="NAME">saveUninitialized</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">  </span><span class="NAME">resave</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> 
+<span class='line'> 52</span> </span><span class="COMM">/**
+<span class='line'> 53</span>  * Serializes the user.
+<span class='line'> 54</span>  * @augments user
+<span class='line'> 55</span>  */</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="NAME">passport.serializeUser</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">user</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">  </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[STATUS] Serializing"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">  </span><span class="NAME">done</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user.id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="COMM">/** 
+<span class='line'> 61</span>  * Deserializing the user.
+<span class='line'> 62</span>  * @augments user
+<span class='line'> 63</span>  */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="NAME">passport.deserializeUser</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">  </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[STATUS] Deserializing"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">  </span><span class="NAME">User.findById</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">      
+<span class='line'> 68</span>       </span><span class="NAME">done</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="COMM">/**
+<span class='line'> 72</span>  * Uses google+ for authentication for the user
+<span class='line'> 73</span>  * @class
+<span class='line'> 74</span>  * @augments GoogleStrategy
+<span class='line'> 75</span>  */</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="NAME">passport.use</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">GoogleStrategy</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">    </span><span class="NAME">clientID</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"116144058942-ubeacp482db65a857umqoae9ar2lufs3.apps.googleusercontent.com"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">    </span><span class="NAME">clientSecret</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"_wQshZFtMvRLjFnAjAVfOwbR"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">    </span><span class="NAME">callbackURL</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"https://nodeauthentication-kino6052.c9.io/auth/google/callback"</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 82</span>    * Authentication system looks up the user in our database
+<span class='line'> 83</span>    * @param {int} token - Unique token id that a user will have.
+<span class='line'> 84</span>    * @param {object} profile - Each user will have a unique profile id which extends from the google.id.
+<span class='line'> 85</span>    * @param {int} refreshToken - A new iteration of the token to match an exisitng user, or create a new one if necessary.
+<span class='line'> 86</span>    */</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">  </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">token</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">refreshToken</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">profile</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 88</span> 
+<span class='line'> 89</span> </span><span class="WHIT">        </span><span class="COMM">// make the code asynchronous</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">        </span><span class="NAME">process.nextTick</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 91</span> 
+<span class='line'> 92</span> </span><span class="WHIT">            </span><span class="COMM">// try to find the user based on their google id</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'> 94</span> 			 * Attempt to find an existing user.
+<span class='line'> 95</span> 			 */</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">            </span><span class="NAME">User.findOne</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="STRN">'google.id'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">profile.id</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> 
+<span class='line'>100</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">user</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">                    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[STATUS] User is Found (Line 63)"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">                    </span><span class="COMM">// if a user is found, log them in</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">                    </span><span class="COMM">// if the user isnt in our database, create a new user</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">					</span><span class="COMM">/**
+<span class='line'>107</span> 					 * Create a new user if necessary.
+<span class='line'>108</span> 					 * @var {object} newUser
+<span class='line'>109</span> 					 */</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newUser</span><span class="WHIT">          </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">User</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> 
+<span class='line'>112</span> </span><span class="WHIT">                    </span><span class="COMM">// set all of the relevant information</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.google.id</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">profile.id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.google.token</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">token</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.google.name</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">profile.displayName</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">                    </span><span class="COMM">//newUser.google.email = profile.emails[0].value; // pull the first email</span><span class="WHIT">
+<span class='line'>117</span> 
+<span class='line'>118</span> </span><span class="WHIT">                    </span><span class="COMM">// save the user</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">					</span><span class="COMM">/**
+<span class='line'>120</span> 					 * Saves all the relevant user information.
+<span class='line'>121</span> 					 * @constructor
+<span class='line'>122</span> 					 */</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.save</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">                        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">                            </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="NAME">err</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">                        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">newUser</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> 
+<span class='line'>133</span> </span><span class="COMM">/* 
+<span class='line'>134</span> *  FACEBOOK STRATEGY
+<span class='line'>135</span> */</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="COMM">/**
+<span class='line'>137</span>  * Uses FACEBOOK for authentication for the user
+<span class='line'>138</span>  * @constructor
+<span class='line'>139</span>  * @augments FacebookStrategy
+<span class='line'>140</span>  */</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="NAME">passport.use</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">FacebookStrategy</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">    </span><span class="NAME">clientID</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"207981646200067"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">    </span><span class="NAME">clientSecret</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"db1f9259916e16e94be9e2c6a02fa6de"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">    </span><span class="NAME">callbackURL</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"https://nodeauthentication-kino6052.c9.io/auth/facebook/callback"</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>147</span>    * Authentication system looks up the user in our database
+<span class='line'>148</span>    * @param {int} token - Unique token id that a user will have.
+<span class='line'>149</span>    * @param {object} profile - Each user will have a unique profile id which extends from the google.id.
+<span class='line'>150</span>    * @param {int} refreshToken - A new iteration of the token to match an exisitng user, or create a new one if necessary.
+<span class='line'>151</span>    */</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">  </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">token</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">refreshToken</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">profile</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>153</span> 
+<span class='line'>154</span> </span><span class="WHIT">        </span><span class="COMM">// make the code asynchronous</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">        </span><span class="COMM">// User.findOne won't fire until we have all our data back from Google</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">        </span><span class="NAME">process.nextTick</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>157</span> 
+<span class='line'>158</span> </span><span class="WHIT">            </span><span class="COMM">// try to find the user based on their google id</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'>160</span> 			 * Attempt to find an existing user.
+<span class='line'>161</span> 			 */</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">            </span><span class="NAME">User.findOne</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="STRN">'facebook.id'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">profile.id</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>165</span> 
+<span class='line'>166</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">user</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">                    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[STATUS] User is Found (Line 63)"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">                    </span><span class="COMM">// if a user is found, log them in</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">                    </span><span class="COMM">// if the user isnt in our database, create a new user</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">					</span><span class="COMM">/**
+<span class='line'>173</span> 					 * Create a new user if necessary.
+<span class='line'>174</span> 					 * @constructor
+<span class='line'>175</span> 					 */</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newUser</span><span class="WHIT">          </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">User</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">                    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">profile</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">                    </span><span class="COMM">// set all of the relevant information</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.facebook.id</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">profile.id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.facebook.token</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">token</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.facebook.name</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">profile.displayName</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">                    </span><span class="COMM">//newUser.google.email = profile.emails[0].value; // pull the first email</span><span class="WHIT">
+<span class='line'>183</span> 
+<span class='line'>184</span> </span><span class="WHIT">                    </span><span class="COMM">// save the user</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">					</span><span class="COMM">/**
+<span class='line'>186</span> 					 * Saves all the relevant user information.
+<span class='line'>187</span> 					 * @constructor
+<span class='line'>188</span> 					 */</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">                    </span><span class="NAME">newUser.save</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">                        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">                            </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="NAME">err</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">                        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">done</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">newUser</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> 
+<span class='line'>199</span> </span><span class="COMM">/**
+<span class='line'>200</span>  * Variables which extend from the previously defined app variables
+<span class='line'>201</span>  * @extends app
+<span class='line'>202</span>  */</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="COMM">// all environments</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="NAME">app.set</span><span class="PUNC">(</span><span class="STRN">'port'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">process.env.PORT</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NUMB">3000</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="NAME">app.set</span><span class="PUNC">(</span><span class="STRN">'views'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">__dirname</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/views'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="NAME">app.set</span><span class="PUNC">(</span><span class="STRN">'view engine'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'jade'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">express.favicon</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">express.logger</span><span class="PUNC">(</span><span class="STRN">'dev'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">express.bodyParser</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">express.methodOverride</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">cookieParser</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">express.static</span><span class="PUNC">(</span><span class="NAME">path.join</span><span class="PUNC">(</span><span class="NAME">__dirname</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'public'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">passport.initialize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="COMM">/**
+<span class='line'>215</span>  * Variables which extend from the previously defined app variable, used when logging into the website.
+<span class='line'>216</span>  * @extends app
+<span class='line'>217</span>  */</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="COMM">// in memory login sessions </span><span class="WHIT">
+<span class='line'>219</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">passport.session</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">app.router</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>221</span> 
+<span class='line'>222</span> </span><span class="COMM">// development only</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">'development'</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'env'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">  </span><span class="NAME">app.use</span><span class="PUNC">(</span><span class="NAME">express.errorHandler</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>226</span> 
+<span class='line'>227</span> </span><span class="COMM">/*
+<span class='line'>228</span> *  USER HOME PAGE
+<span class='line'>229</span> *
+<span class='line'>230</span> *  Home page is where the user sees
+<span class='line'>231</span> *  their stats.
+<span class='line'>232</span> *  In order to be able to see the stats,
+<span class='line'>233</span> *  user has to log in through google or
+<span class='line'>234</span> *  facebook.
+<span class='line'>235</span> *  Also, the user will have to have an account 
+<span class='line'>236</span> *  with Fitbit and Delivery.com in order
+<span class='line'>237</span> *  to be able to login.
+<span class='line'>238</span> *
+<span class='line'>239</span> */</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="COMM">/**
+<span class='line'>241</span>  * Checks if the user is logged in, if not the user is then redirected to where necessary
+<span class='line'>242</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>243</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>244</span>  */</span><span class="WHIT">
+<span class='line'>245</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">isLoggedIn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">req.user.address</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">    </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="STRN">"/address"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">  </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">req.user.tokens.fitbit.access</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="COMM">// user is not loged into fitbit account (no refresh token)</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="WHIT">    </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="NAME">OAuth2Urls.fitbitAuthUrl</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">  </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">req.user.tokens.delivery.access</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="COMM">// user is not loged into delivery account</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">    </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="NAME">OAuth2Urls.deliveryAuthUrl</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">  </span><span class="NAME">routes.index</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>256</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>257</span> 
+<span class='line'>258</span> </span><span class="COMM">/*
+<span class='line'>259</span> *  LOGIN PAGE
+<span class='line'>260</span> */</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="COMM">/**
+<span class='line'>262</span>  * The main login page of the web app.
+<span class='line'>263</span>  */</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/login'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">login.log</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="NAME">app.post</span><span class="PUNC">(</span><span class="STRN">'/login'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">routes.index</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>266</span> 
+<span class='line'>267</span> </span><span class="COMM">/*
+<span class='line'>268</span> *  ADDRESS PAGE
+<span class='line'>269</span> *
+<span class='line'>270</span> *  Where user provides their address
+<span class='line'>271</span> */</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="COMM">/**
+<span class='line'>273</span>  * Page for where the user provides their address to snag their food.
+<span class='line'>274</span>  * @param {string} address - The user's actual address.
+<span class='line'>275</span>  */</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/address'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address.address</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>277</span> 
+<span class='line'>278</span> </span><span class="COMM">/**
+<span class='line'>279</span>  * Checks if the user is logged in currently, by grabbing the user id.
+<span class='line'>280</span>  */</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="NAME">app.post</span><span class="PUNC">(</span><span class="STRN">'/preference'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">isLoggedIn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>282</span> </span><span class="WHIT">  </span><span class="NAME">process.nextTick</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">    </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"facebook.id"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$push</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"foodPreference"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.food01</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">      </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">err</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">  </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="STRN">"/"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/users'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">user.list</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> 
+<span class='line'>293</span> </span><span class="COMM">/*
+<span class='line'>294</span> *  Fitbit Authentication
+<span class='line'>295</span> */</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="COMM">/**
+<span class='line'>297</span>  * Fitbit authentication for the fitbit.
+<span class='line'>298</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>299</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>300</span>  */</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/auth/fitbit'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">req.query.code</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="COMM">// about to request tokens</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">    </span><span class="KEYW">try</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">        </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">req.query.code</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// get the code from the callback url! (how convenient!)</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">      </span><span class="NAME">res.header</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">        </span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">OAuth2Urls.fitbitHeaders</span><span class="PUNC">[</span><span class="STRN">"Authorization"</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>307</span>         </span><span class="STRN">"Content-Type"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">OAuth2Urls.fitbitHeaders</span><span class="PUNC">[</span><span class="STRN">"Content-Type"</span><span class="PUNC">]</span><span class="WHIT"> 
+<span class='line'>308</span>       </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> 
+<span class='line'>310</span> </span><span class="WHIT">      </span><span class="COMM">// POSTing from the Server side</span><span class="WHIT">
+<span class='line'>311</span> </span><span class="WHIT">	  </span><span class="COMM">/**
+<span class='line'>312</span> 	   * Posts from the server side requesting the needed information
+<span class='line'>313</span> 	   * @var {object} options
+<span class='line'>314</span> 	   */</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">        </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">          </span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">OAuth2Urls.fitbitHeaders</span><span class="PUNC">[</span><span class="STRN">"Authorization"</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>318</span>           </span><span class="STRN">"Content-Type"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">OAuth2Urls.fitbitHeaders</span><span class="PUNC">[</span><span class="STRN">"Content-Type"</span><span class="PUNC">]</span><span class="WHIT"> 
+<span class='line'>319</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">      </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">        </span><span class="PUNC">.</span><span class="NAME">post</span><span class="PUNC">(</span><span class="NAME">OAuth2Urls.fitbitTokenUrl</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.code</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>326</span> </span><span class="WHIT">          </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[AFTER REQUESTING TOKENS] BODY: "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>327</span> </span><span class="WHIT">          </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$set</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"tokens.fitbit.access"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">resp.body.access_token</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>329</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">          </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$set</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"tokens.fitbit.refresh"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">resp.body.refresh_token</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">          
+<span class='line'>334</span>           </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="STRN">'/'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">on</span><span class="PUNC">(</span><span class="STRN">'end'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">    </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">      </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">  </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="COMM">// tokens already requested</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">    </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">req.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>349</span> 
+<span class='line'>350</span> </span><span class="COMM">// FITBIT GET DATA</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="COMM">/**
+<span class='line'>352</span>  * Gets the fitbit data using api calls.
+<span class='line'>353</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>354</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>355</span>  */</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">"/fitbit/getData"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">  </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="WHIT">    </span><span class="PUNC">.</span><span class="NAME">get</span><span class="PUNC">(</span><span class="STRN">"https://api.fitbit.com/1/user/-/profile.json"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>359</span> </span><span class="WHIT">						</span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"Bearer "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.user.tokens.fitbit.access</span><span class="WHIT">
+<span class='line'>360</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>361</span>       </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>364</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>366</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>367</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>368</span> 
+<span class='line'>369</span> </span><span class="COMM">/*
+<span class='line'>370</span> *  Delivery API Helper 
+<span class='line'>371</span> */</span><span class="WHIT">
+<span class='line'>372</span> 
+<span class='line'>373</span> </span><span class="COMM">// GET LOCAL MERCHANTS</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/delivery/getLocalMerchants'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">  </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">    </span><span class="PUNC">.</span><span class="NAME">get</span><span class="PUNC">(</span><span class="STRN">"https://api.delivery.com/merchant/search/delivery?client_id="</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.client_id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"&address="</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.address</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>377</span>         </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>379</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>380</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>381</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>383</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>384</span> 
+<span class='line'>385</span> </span><span class="COMM">// GET MENUS FROM MERCHANTS</span><span class="WHIT">
+<span class='line'>386</span> </span><span class="COMM">/**
+<span class='line'>387</span>  * Gets the food menus from the desired restaurant
+<span class='line'>388</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>389</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>390</span>  */</span><span class="WHIT">
+<span class='line'>391</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/delivery/getMenusFromMerchants'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>392</span> </span><span class="WHIT">  </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>393</span> </span><span class="WHIT">    </span><span class="PUNC">.</span><span class="NAME">get</span><span class="PUNC">(</span><span class="STRN">"https://api.delivery.com/merchant/"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.merchantId</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"/menu?client_id="</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.client_id</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>394</span>         </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>395</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>399</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>400</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>401</span> 
+<span class='line'>402</span> </span><span class="COMM">// GET USER CART</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="COMM">/**
+<span class='line'>404</span>  * Pulls up the user's cart.
+<span class='line'>405</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>406</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>407</span>  */</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/delivery/getUserCart'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="WHIT">  </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">req.user.cart</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>410</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>411</span> 
+<span class='line'>412</span> </span><span class="COMM">// GET CART CONTENTS</span><span class="WHIT">
+<span class='line'>413</span> </span><span class="COMM">/**
+<span class='line'>414</span>  * Makes a request to delivery.com to bring up the contents of a specific user's cart.
+<span class='line'>415</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>416</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>417</span>  */</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/delivery/getCartContents'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="WHIT">  </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>420</span> </span><span class="WHIT">    </span><span class="PUNC">.</span><span class="NAME">get</span><span class="PUNC">(</span><span class="STRN">"https://api.delivery.com/customer/cart/"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.merchantId</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"?client_id="</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.client_id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.user.tokens.delivery.access</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">        </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>422</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>423</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>424</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>425</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>426</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>428</span> 
+<span class='line'>429</span> </span><span class="COMM">// GET PAYMENT METHODS</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="COMM">/**
+<span class='line'>431</span>  * Makes a request to delivery.com to bring up payment options for the customer.
+<span class='line'>432</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>433</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>434</span>  */</span><span class="WHIT">
+<span class='line'>435</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/delivery/getPaymentMethods'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>436</span> </span><span class="WHIT">  </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="WHIT">    </span><span class="PUNC">.</span><span class="NAME">get</span><span class="PUNC">(</span><span class="STRN">"https://api.delivery.com/customer/cc?client_id="</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.client_id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.user.tokens.delivery.access</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>438</span> </span><span class="WHIT">        </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>439</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>441</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>442</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>443</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>445</span> 
+<span class='line'>446</span> </span><span class="COMM">// ADD ITEM TO CART</span><span class="WHIT">
+<span class='line'>447</span> </span><span class="COMM">/**
+<span class='line'>448</span>  * An item is added to the cart and delivery.com recieves the info and updates the cart.
+<span class='line'>449</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>450</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>451</span>  */</span><span class="WHIT">
+<span class='line'>452</span> </span><span class="NAME">app.post</span><span class="PUNC">(</span><span class="STRN">'/delivery/addToCart'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>453</span> </span><span class="WHIT">   </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>454</span> </span><span class="WHIT">        </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>455</span> </span><span class="WHIT">          </span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.user.tokens.delivery.access</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>456</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>457</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>458</span> </span><span class="WHIT">      </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>459</span> </span><span class="WHIT">        </span><span class="PUNC">.</span><span class="NAME">post</span><span class="PUNC">(</span><span class="STRN">"https://api.delivery.com/customer/cart/"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.body.merchantId</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>460</span> </span><span class="WHIT">                  </span><span class="STRN">"order_type"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"delivery"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>461</span> </span><span class="WHIT">                  </span><span class="STRN">"instructions"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">                  </span><span class="STRN">"item"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>463</span> </span><span class="WHIT">                    </span><span class="STRN">"item_id"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.item.item_id</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>464</span> </span><span class="WHIT">                    </span><span class="STRN">"item_qty"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT">
+<span class='line'>465</span> </span><span class="WHIT">                  </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>466</span> </span><span class="WHIT">                  </span><span class="NAME">client_id</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl"</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>467</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>469</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>470</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>471</span> </span><span class="WHIT">          </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$addToSet</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"cart"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.merchantId</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>472</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>473</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>474</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">on</span><span class="PUNC">(</span><span class="STRN">'end'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>475</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>477</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>479</span> </span><span class="WHIT">    
+<span class='line'>480</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>481</span> 
+<span class='line'>482</span> </span><span class="COMM">// PLACE ORDER</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="COMM">/**
+<span class='line'>484</span>  * Using the deliuvery.com api a request with the information for the placed order is send.
+<span class='line'>485</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>486</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>487</span>  */</span><span class="WHIT">
+<span class='line'>488</span> </span><span class="NAME">app.post</span><span class="PUNC">(</span><span class="STRN">'/delivery/placeOrder'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>489</span> </span><span class="WHIT">   </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>490</span> </span><span class="WHIT">        </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>491</span> </span><span class="WHIT">          </span><span class="STRN">"Authorization"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.headers</span><span class="PUNC">[</span><span class="STRN">"Authorization"</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>492</span>         </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>493</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>494</span> </span><span class="WHIT">      </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>495</span> </span><span class="WHIT">        </span><span class="PUNC">.</span><span class="NAME">post</span><span class="PUNC">(</span><span class="STRN">"https://api.delivery.com/customer/cart/"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.body.merchantId</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"/checkout"</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>496</span>                 </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>497</span> </span><span class="WHIT">                  </span><span class="STRN">"tip"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.tip</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">                  </span><span class="STRN">"location_id"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.location_id</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">                  </span><span class="STRN">"uhau_id"</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.uhau_id</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">                  </span><span class="STRN">"instructions"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"No instructions."</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">                  </span><span class="STRN">"payments"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.payments</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>502</span> </span><span class="WHIT">                  </span><span class="STRN">"order_type"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"delivery"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>503</span> </span><span class="WHIT">                  </span><span class="STRN">"order_time"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.body.order_time</span><span class="WHIT">
+<span class='line'>504</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>505</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>506</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>507</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>508</span> </span><span class="WHIT">          </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[AFTER REQUESTING TOKENS] BODY: "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>509</span> </span><span class="WHIT">          </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="STRN">'Order has been successfully placed!'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>510</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">on</span><span class="PUNC">(</span><span class="STRN">'end'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>511</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>512</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>513</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>514</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>515</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>516</span> 
+<span class='line'>517</span> </span><span class="COMM">/*
+<span class='line'>518</span> *  Delivery Authentication
+<span class='line'>519</span> */</span><span class="WHIT">
+<span class='line'>520</span> </span><span class="COMM">/**
+<span class='line'>521</span>  * User credentials are verififed and an order is made.
+<span class='line'>522</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>523</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>524</span>  */</span><span class="WHIT">
+<span class='line'>525</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/auth/delivery'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>526</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">req.query.code</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT"> </span><span class="COMM">// about to request tokens</span><span class="WHIT">
+<span class='line'>527</span> </span><span class="WHIT">    </span><span class="KEYW">try</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>528</span> </span><span class="WHIT">      </span><span class="COMM">// POSTing from the Server side</span><span class="WHIT">
+<span class='line'>529</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>530</span> </span><span class="WHIT">        
+<span class='line'>531</span>       </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>532</span> </span><span class="WHIT">      </span><span class="NAME">needle</span><span class="WHIT">
+<span class='line'>533</span> </span><span class="WHIT">        </span><span class="PUNC">.</span><span class="NAME">post</span><span class="PUNC">(</span><span class="NAME">OAuth2Urls.deliveryTokenUrl</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.query.code</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>534</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>535</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>536</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>537</span> </span><span class="WHIT">          </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"[AFTER REQUESTING TOKENS] BODY: "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="PUNC">(</span><span class="NAME">resp.body</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>538</span> </span><span class="WHIT">          </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$set</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"tokens.delivery.access"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">resp.body.access_token</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>539</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>540</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>541</span> </span><span class="WHIT">          </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$set</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">"tokens.delivery.refresh"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">resp.body.refresh_token</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>542</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>543</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>544</span> </span><span class="WHIT">          
+<span class='line'>545</span>           </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="STRN">'/'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>546</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">on</span><span class="PUNC">(</span><span class="STRN">'end'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">resp</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>547</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>548</span> </span><span class="WHIT">            </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>549</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>550</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>551</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>552</span> </span><span class="WHIT">    </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>553</span> </span><span class="WHIT">      </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>554</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>555</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>556</span> </span><span class="WHIT">  </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="COMM">// tokens already requested</span><span class="WHIT">
+<span class='line'>557</span> </span><span class="WHIT">    </span><span class="NAME">res.send</span><span class="PUNC">(</span><span class="NAME">req.body</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>558</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>559</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>560</span> 
+<span class='line'>561</span> </span><span class="COMM">/*
+<span class='line'>562</span> *  GOOGLE AUTHENTICATION
+<span class='line'>563</span> */</span><span class="WHIT">
+<span class='line'>564</span> 
+<span class='line'>565</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/auth/google'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>566</span> </span><span class="WHIT">  </span><span class="NAME">passport.authenticate</span><span class="PUNC">(</span><span class="STRN">'google'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">scope</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">'profile'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'email'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>567</span> 
+<span class='line'>568</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/auth/google/callback'</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>569</span>   </span><span class="NAME">passport.authenticate</span><span class="PUNC">(</span><span class="STRN">'google'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='line'>570</span>       </span><span class="NAME">failureRedirect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'/login'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>571</span> </span><span class="WHIT">      </span><span class="NAME">successRedirect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="WHIT">
+<span class='line'>572</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>573</span> </span><span class="WHIT">  
+<span class='line'>574</span>   
+<span class='line'>575</span> </span><span class="COMM">/* 
+<span class='line'>576</span> *  FACEBOOK AUTHENTICATION
+<span class='line'>577</span> */</span><span class="WHIT">
+<span class='line'>578</span> 
+<span class='line'>579</span> </span><span class="COMM">// Redirect the user to Facebook for authentication.  When complete,</span><span class="WHIT">
+<span class='line'>580</span> </span><span class="COMM">// Facebook will redirect the user back to the application at</span><span class="WHIT">
+<span class='line'>581</span> </span><span class="COMM">//     /auth/facebook/callback</span><span class="WHIT">
+<span class='line'>582</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/auth/facebook'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">passport.authenticate</span><span class="PUNC">(</span><span class="STRN">'facebook'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>583</span> 
+<span class='line'>584</span> </span><span class="COMM">// Facebook will redirect the user to this URL after approval.  Finish the</span><span class="WHIT">
+<span class='line'>585</span> </span><span class="COMM">// authentication process by attempting to obtain an access token.  If</span><span class="WHIT">
+<span class='line'>586</span> </span><span class="COMM">// access was granted, the user will be logged in.  Otherwise,</span><span class="WHIT">
+<span class='line'>587</span> </span><span class="COMM">// authentication has failed.</span><span class="WHIT">
+<span class='line'>588</span> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/auth/facebook/callback'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>589</span> </span><span class="WHIT">  </span><span class="NAME">passport.authenticate</span><span class="PUNC">(</span><span class="STRN">'facebook'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">successRedirect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>590</span> </span><span class="WHIT">                                      </span><span class="NAME">failureRedirect</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'/login'</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>591</span> </span><span class="WHIT">  
+<span class='line'>592</span> </span><span class="COMM">/**
+<span class='line'>593</span>  * The user is logged out through this process.
+<span class='line'>594</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>595</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>596</span>  */</span><span class="WHIT">
+<span class='line'>597</span> </span><span class="WHIT">  </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'/logout'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>598</span> </span><span class="WHIT">  </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$set</span><span class="PUNC">:</span><span class="PUNC">{</span><span class="STRN">"tokens.fitbit.access"</span><span class="PUNC">:</span><span class="STRN">""</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>599</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>600</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>601</span> </span><span class="WHIT">  </span><span class="NAME">User.update</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="STRN">"google.id"</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">req.user.google.id</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">$set</span><span class="PUNC">:</span><span class="PUNC">{</span><span class="STRN">"tokens.delivery.access"</span><span class="PUNC">:</span><span class="STRN">""</span><span class="PUNC">}</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>602</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>603</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>604</span> </span><span class="WHIT">  </span><span class="NAME">req.logout</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>605</span> </span><span class="WHIT">  </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="STRN">'/login'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>606</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>607</span> 
+<span class='line'>608</span> </span><span class="COMM">/*
+<span class='line'>609</span> *  CREATE HTTP SERVER
+<span class='line'>610</span> */</span><span class="WHIT">
+<span class='line'>611</span> </span><span class="COMM">/** Creates an HTTP Server. */</span><span class="WHIT">
+<span class='line'>612</span> </span><span class="NAME">http.createServer</span><span class="PUNC">(</span><span class="NAME">app</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">listen</span><span class="PUNC">(</span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'port'</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>613</span> </span><span class="WHIT">  </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'Express server listening on port '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">app.get</span><span class="PUNC">(</span><span class="STRN">'port'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>614</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>615</span> 
+<span class='line'>616</span> </span><span class="COMM">/* 
+<span class='line'>617</span> *  VARIOUS FUNCTIONS
+<span class='line'>618</span> */</span><span class="WHIT">
+<span class='line'>619</span> </span><span class="COMM">/**
+<span class='line'>620</span>  * Checks if the user is logged in, if not the user is then redirected to where necessary
+<span class='line'>621</span>  * @param {object} req - The requests for the needed credentials
+<span class='line'>622</span>  * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+<span class='line'>623</span>  * @param {object} next - Returns the next user's information.
+<span class='line'>624</span>  */</span><span class="WHIT">
+<span class='line'>625</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">isLoggedIn</span><span class="PUNC">(</span><span class="NAME">req</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">res</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">next</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>626</span> </span><span class="WHIT">  </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"isAuthenticated? "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">req.isAuthenticated</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>627</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">req.isAuthenticated</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>628</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">next</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>629</span> </span><span class="WHIT">  </span><span class="NAME">res.redirect</span><span class="PUNC">(</span><span class="STRN">'/login'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>630</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>631</span> </span></pre></body></html>
