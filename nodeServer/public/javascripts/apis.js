@@ -7,6 +7,7 @@ var cuisineArray = [];
 var cart = [];
 /**
  * Waits while DOM gets loaded fully
+ * Waits for all the API calls to finish with the relevant user, merchant, and food data pulled up.
  */
 $(function(){ // Waits while DOM gets loaded fully
 	getCartContents(); 
@@ -27,7 +28,8 @@ $(function(){ // Waits while DOM gets loaded fully
 
 });
 /**
- * Gets the fitbit data of a specific User.
+ * Makes a call to the fitbit website to retrieve user data. Upon success to the data object the user's weight is added.
+ * If there can't be a connection made with the fitbit website or the user is not registered an error is returned.
  */
 function getFitbitData(){
 	$.ajax({
@@ -43,7 +45,11 @@ function getFitbitData(){
 		}
 	});
 }
-/** Gets data of a selected food shop. */
+/** 
+ * Asynchronous GET request is made to the /delivery/getLocalMerchants endpoint
+ * It passes client id and the user's location, on success response it returns the ids of all nearby restaurants
+ * The response is then iterated and the option html elements get appended to the select element with id "#select-choice-c".
+ */
 function getMerchantIds(){
 $.ajax({
 		  type: 'GET',
@@ -70,7 +76,8 @@ $.ajax({
 	});   
 }
 /**
- * Searches recursively for the right child's data
+ * When a request is made from the console, to retrieve particular information regarding one of the children.
+ * If the length of the child is greater than 0 than values of the children are iterated and the value of the child is returned.
  * @param {number} iterable Number of iterations
  * @param {object} callback
  */
@@ -85,7 +92,11 @@ function recursiveSearch(iterable, callback){
         callback(iterable);
     }
 }
-/** Gets the contents of the users cart. */
+/** 
+ * Asynchronous GET request is made to the /delivery/getUserCart endpoint
+ * It passes merchant id which is selected through the user
+ * The response is then iterated and the option html elements get appended to the select element with id "#cart".
+ */
 function getCartContents(){
 	$.ajax({
 		tye: "GET",
@@ -119,7 +130,9 @@ function getCartContents(){
     
 }
 /**
- * Add an item to your cart
+ * Asynchronous POST request is made to the /delivery/addToCart endpoint
+ * It passes merchant id and the dish id which the user selected to order.
+ * The response is then iterated and the option html elements get appended to the select element with id "#token".
  * @param {integer} merchantId Identify the merchant
  * @param {integer} dishId Identify the dish 
  */
@@ -153,7 +166,9 @@ function addToCart(merchantId, dishId){
  });
 }
 /**
- * Called when you click on a cuisine name to get the dishes.
+ * Asynchronous GET request is made to the /delivery/getMenusFromMerchants endpoint
+ * It passes merchant id which sends the relevant token to retrieve the dishes relevant to the merchantId
+ * The response is then iterated and the option html elements get appended to the select element with id "#select-choice-d".
  * @param {integer} merchantId Takes in which restaurant to get food info from.
  */
 function getDishes(merchantId){ // Called when you click on a cuisine name
@@ -186,7 +201,9 @@ function getDishes(merchantId){ // Called when you click on a cuisine name
 	}); 
 }
 /**
- * Called when you click on a dish name to get the calorie contents.
+ * Asynchronous GET request is made to the "https://api.nutritionix.com/v1_1/search/" endpoint
+ * It passes name which is just the name of the dish selected by the user to purchase
+ * The response is then iterated and the option html elements get appended to the select element with id "#calories".
  * @param {string} name Name of the dish to pick up the calorie contents from.
  */
 function getCalories(name){ // Called when you click on a dish name

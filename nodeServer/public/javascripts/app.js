@@ -1,8 +1,11 @@
-/** Sets the state of the lock. */
+/** Sets the state of the lock. Initially at null. */
 var lock = null;
 
 /**
  * Determines if the application is ready to go.
+ * The state of the lock is checked and a new authorization is issued when through the option at eatbit.auth0.com.
+ * A request is made and the system waits for an alert repsonse with the relevant user token.
+ * Once the relevant information is received it's stored in the local storage.
  */
 $(document).ready(function() {
    lock = new Auth0Lock('pAvyFmdUXlNclg9xBE0w5x0LNVvu2ZjO', 'eatbit.auth0.com');

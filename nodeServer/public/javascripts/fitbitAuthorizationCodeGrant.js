@@ -1,5 +1,6 @@
 /**
  * Function that extracts paramaters from url, ex: 10 will extract 10 and so on.
+ * e.g. url.html?parameter=10, it will extract 10 from parameter
  * @param {integer} sParam The number of parameters to extract.
  */
 function GetURLParameter(sParam) // function that extracts parameters from url (e.g. url.html?parameter=10, it will extract 10 from parameter)
@@ -21,6 +22,7 @@ function GetURLParameter(sParam) // function that extracts parameters from url (
 	}
 /**
  * Makes an API call to check on the authenticity of the request being made.
+ * When the token is determined to be authentic it's returned with the relevant authorization code grant
  */
 function authorizationCodeGrant(){
 		alert("test");
@@ -33,7 +35,11 @@ function authorizationCodeGrant(){
 		};
 		window.location = "https://www.fitbit.com/oauth2/authorize?" + url.response_type + url.client_id + url.redirect_uri + url.scope;
 	}
-/** Makes an API call to get an access token from the Fitbit website. */
+/**
+ * Asynchronous POST request is made to the https://api.fitbit.com/oauth2/token endpoint
+ * It passes client id and grant type on success the token to access a particular user's fitbit data is returned 
+ * The response is then iterated and the option html elements get appended to the select element with id response.access_token
+ */
 function getAccessTokenFitbit(){
 		console.log(GetURLParameter("code"));
 		$.ajax({
