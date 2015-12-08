@@ -2,7 +2,9 @@
 /**
  * Module dependencies.
  */
-
+/**
+ * Variables needed to run the webpage ranging from databases to authentication services.
+ */
 var express = require('express')
   , routes = require('./routes')
   , address = require('./routes/address')
@@ -20,29 +22,47 @@ var express = require('express')
   , OAuth2Urls = require('./auth/urls').urls
   , needle = require('needle')
   ;
-  
+/**
+ * A variables for the app
+ * @var {application} app
+ */
 var app = express();
 
 /*
 * MONGODB
 */
-
+/**
+ * Connects to the mongodb
+ */
 mongoose.connect('mongodb://localhost:27017/');
-
+/**
+ * A variables for the mongodb
+ * @var {database} db
+ */
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-
+/**
+ * Start of the application.
+ * @constructor
+ */
 app.use(session({
   secret: 'secrettexthere',
   saveUninitialized: true,
   resave: true
 }));
 
+/**
+ * Serializes the user.
+ * @augments user
+ */
 passport.serializeUser(function(user, done) {
   console.log("[STATUS] Serializing");
   done(null, user.id);
 });
-
+/** 
+ * Deserializing the user.
+ * @augments user
+ */
 passport.deserializeUser(function(id, done) {
   console.log("[STATUS] Deserializing");
   User.findById(id, function(err, user) {
@@ -50,18 +70,31 @@ passport.deserializeUser(function(id, done) {
       done(err, user);
   });
 });
-
+/**
+ * Uses google+ for authentication for the user
+ * @constructor
+ * @augments GoogleStrategy
+ */
 passport.use(new GoogleStrategy({
     clientID: "116144058942-ubeacp482db65a857umqoae9ar2lufs3.apps.googleusercontent.com",
     clientSecret: "_wQshZFtMvRLjFnAjAVfOwbR",
     callbackURL: "https://nodeauthentication-kino6052.c9.io/auth/google/callback"
   },
+  /**
+   * Authentication system looks up the user in our database
+   * @param {int} token - Unique token id that a user will have.
+   * @param {object} profile - Each user will have a unique profile id which extends from the google.id.
+   * @param {int} refreshToken - A new iteration of the token to match an exisitng user, or create a new one if necessary.
+   */
   function(token, refreshToken, profile, done) {
 
         // make the code asynchronous
         process.nextTick(function() {
 
             // try to find the user based on their google id
+			/**
+			 * Attempt to find an existing user.
+			 */
             User.findOne({ 'google.id' : profile.id }, function(err, user) {
                 if (err)
                     return done(err);
@@ -72,6 +105,10 @@ passport.use(new GoogleStrategy({
                     return done(null, user);
                 } else {
                     // if the user isnt in our database, create a new user
+					/**
+					 * Create a new user if necessary.
+					 * @constructor
+					 */
                     var newUser          = new User();
 
                     // set all of the relevant information
@@ -81,6 +118,10 @@ passport.use(new GoogleStrategy({
                     //newUser.google.email = profile.emails[0].value; // pull the first email
 
                     // save the user
+					/**
+					 * Saves all the relevant user information.
+					 * @constructor
+					 */
                     newUser.save(function(err) {
                         if (err)
                             throw err;
@@ -94,11 +135,22 @@ passport.use(new GoogleStrategy({
 /* 
 *  FACEBOOK STRATEGY
 */
+/**
+ * Uses FACEBOOK for authentication for the user
+ * @constructor
+ * @augments FacebookStrategy
+ */
 passport.use(new FacebookStrategy({
     clientID: "207981646200067",
     clientSecret: "db1f9259916e16e94be9e2c6a02fa6de",
     callbackURL: "https://nodeauthentication-kino6052.c9.io/auth/facebook/callback"
   },
+  /**
+   * Authentication system looks up the user in our database
+   * @param {int} token - Unique token id that a user will have.
+   * @param {object} profile - Each user will have a unique profile id which extends from the google.id.
+   * @param {int} refreshToken - A new iteration of the token to match an exisitng user, or create a new one if necessary.
+   */
   function(token, refreshToken, profile, done) {
 
         // make the code asynchronous
@@ -106,6 +158,9 @@ passport.use(new FacebookStrategy({
         process.nextTick(function() {
 
             // try to find the user based on their google id
+			/**
+			 * Attempt to find an existing user.
+			 */
             User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
                 if (err)
                     return done(err);
@@ -116,6 +171,10 @@ passport.use(new FacebookStrategy({
                     return done(null, user);
                 } else {
                     // if the user isnt in our database, create a new user
+					/**
+					 * Create a new user if necessary.
+					 * @constructor
+					 */
                     var newUser          = new User();
                     console.log(profile);
                     // set all of the relevant information
@@ -125,6 +184,10 @@ passport.use(new FacebookStrategy({
                     //newUser.google.email = profile.emails[0].value; // pull the first email
 
                     // save the user
+					/**
+					 * Saves all the relevant user information.
+					 * @constructor
+					 */
                     newUser.save(function(err) {
                         if (err)
                             throw err;
@@ -135,7 +198,10 @@ passport.use(new FacebookStrategy({
         });
     }));
 
-
+/**
+ * Variables which extend from the previously defined app variables
+ * @extends app
+ */
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -147,6 +213,10 @@ app.use(express.methodOverride());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+/**
+ * Variables which extend from the previously defined app variable, used when logging into the website.
+ * @extends app
+ */
 // in memory login sessions 
 app.use(passport.session());
 app.use(app.router);
@@ -169,7 +239,11 @@ if ('development' == app.get('env')) {
 *  to be able to login.
 *
 */
-
+/**
+ * Checks if the user is logged in, if not the user is then redirected to where necessary
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/', isLoggedIn, function(req, res){
   if (!req.user.address){
     res.redirect("/address");
@@ -186,6 +260,9 @@ app.get('/', isLoggedIn, function(req, res){
 /*
 *  LOGIN PAGE
 */
+/**
+ * The main login page of the web app.
+ */
 app.get('/login', login.log);
 app.post('/login', routes.index);
 
@@ -194,8 +271,15 @@ app.post('/login', routes.index);
 *
 *  Where user provides their address
 */
+/**
+ * Page for where the user provides their address to snag their food.
+ * @param {string} address - The user's actual address.
+ */
 app.get('/address', address.address);
 
+/**
+ * Checks if the user is logged in currently, by grabbing the user id.
+ */
 app.post('/preference', isLoggedIn, function(req, res){
   process.nextTick(function(){
     User.update({"facebook.id": req.user.google.id}, {$push: {"foodPreference": req.body.food01}}, function(err){
@@ -211,6 +295,11 @@ app.get('/users', user.list);
 /*
 *  Fitbit Authentication
 */
+/**
+ * Fitbit authentication for the fitbit.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/auth/fitbit', function(req, res){
   if (req.query.code){ // about to request tokens
     try{
@@ -221,6 +310,9 @@ app.get('/auth/fitbit', function(req, res){
       });
 
       // POSTing from the Server side
+	  /**
+	   * @var {object} options
+	   */
       var options = {
         headers: {
           "Authorization": OAuth2Urls.fitbitHeaders["Authorization"], 
@@ -257,6 +349,7 @@ app.get('/auth/fitbit', function(req, res){
 });
 
 // FITBIT GET DATA
+
 app.get("/fitbit/getData", function(req, res){
   needle
     .get("https://api.fitbit.com/1/user/-/profile.json", {headers: {
