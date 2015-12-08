@@ -22,7 +22,7 @@ Instruction :
 * Documentation
   * This is where the auto-generated documentation .html files are found
 * database
-  * Folder containing UML diagram for the database organization.
+  * Folder containing UML diagram for the database organization
 * nodeServer
   * node.js server with project folders
 * node_modules
@@ -35,7 +35,7 @@ Instruction :
 ## Running Tests
 
 1. Go to the "toolbox" folder
-2. Run apis.js
+2. Run apis.html
 
 
 ## APIs
