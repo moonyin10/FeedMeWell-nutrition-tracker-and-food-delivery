@@ -1,41 +1,59 @@
 extends layout
-
 block content
-  script(type='text/javascript', src='javascripts/apis.js')
-  link(rel="stylesheet", type="text/css", href='stylesheets/style.css')
-  h1= title
-  a(href="./logout") Log out
-  p Hello, #{name}
-  p Welcome to #{title}
-  p(id="location") #{address}
-  p(id="token") #{token}
-  p #{food}
-  // Code below is by Feras Odeh (http://stackoverflow.com/questions/10151837/submit-jade-form)
-  div
-      button(id="getFitbitData") Get Fitbit Data!
-      button(id="getMenu") Get Menu!
-      button(id="updateCart") Update Cart Contents!
-      button(id="checkOut") Check Out!
-  div
-  table
-    tr
-      th Cuisine
-      th MerchantID
-      th Dish
-      th Cart
-    tr
-      td(id="cuisines",style="vertical-align: top")
-      td(id="merchant_id",style="vertical-align: top")
-      td(id="dishes",style="vertical-align: top")
-      td(id="cart",style="vertical-align: top")
-      //form(action='/preference',method='post')
-      //  div(id='hiddendiv',data-role='fieldcontain')
-      //    fieldset(data-role='controlgroup')
-      //      label Food Type 01
-      //      input(name="food01",type='text')
-      //    fieldset(data-role='controlgroup')
-      //      label Food Type 02
-      //      input(name="food02",type='text')
-      //  div(data-role='fieldcontain')   
-      //    input(type='submit',value='Food Preference',data-transition='fade', data-theme='c')  
-        
+    script(src="./javascripts/apis.js")
+    |<div data-role="page">
+      
+    |<div data-role="header" data-position="fixed">
+    |    <a href="/logout" data-role="button">Log out</a>
+    |    
+    |    <h1>eatbit</h1>
+    |  </div><!-- /header -->
+    
+    |  <div data-role="content"> 
+    |  <p id="weight">Your Weight:</p>
+    |  <p id="calories-to-go"><strong>Calories to Go:</strong></p>
+    
+    |  <center>  
+    |  <div data-role="fieldcontain">
+    |    
+    |    <form>
+    |    <select name="select-choice-c" id="select-choice-c">
+    |      <option value='selected'>Choose a Restaurant</option>
+    |    </select>
+    |    </form>
+    |    <button id="refresh">Get Menu</button>
+    |  </div>
+    |  
+    
+      
+    |  <div data-role="fieldcontain">     
+    |    <select name="select-choice-d" id="select-choice-d">
+    |      <option value='selected'>Choose a Dish</option>
+    |    </select>
+    |    <button id="addToCart">Add to Cart</button>
+    |  </div>
+    |  </center>
+    |  </div><!-- /content -->
+      
+    |  <div class="ui-body">
+    |    <div data-role="collapsible" data-collapsed="true" data-theme="a">
+    |      <h3>My Shopping Cart</h3>
+    |      <ul data-role="listview" data-inset="true" id="cart">
+    |        <li>Item 1</li>
+    |        <li>Item 2</li>
+    |        <li>Item 3</li>
+    |    </ul>
+    |    </div><!-- /collapsible -->
+      
+    |  <a href="#" data-role="button">Place Order</a>
+      
+    |  </div><!-- /themed container -->
+      
+    
+    |  <div data-role="footer" data-position="fixed">
+    |    <div data-role="navbar">
+    
+    |    </div>
+    |  </div>
+    
+    |</div><!-- /page -->

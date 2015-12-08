@@ -2,34 +2,34 @@ var cache; // Temporary storage so that we don't make excessive API calls (Globa
 var cuisineArray = [];
 var cart = [];
 $(function(){ // Waits while DOM gets loaded fully
-	$("#getMenu").click(function(){ // Called when the submit button is clicked
-	    $("#dishes").text("");
-	    $("#cuisines").text("");
-	    $("#merchant_id").text("");
-		getMerchantIds();
+	getCartContents(); 
+	getMerchantIds();
+	getFitbitData();
+	$("#refresh").click(function(){
+		var val = $("#select-choice-c option:selected").attr('id');
+		getDishes(val);
 	});
-	
-	$("#updateCart").click(function(){
-	   $("#cart").text("");
-	   getCartContents(); 
+	$("#addToCart").click(function(){
+		var merchant = $("#select-choice-d option:selected").data('merchant');
+		var dish = $("#select-choice-d option:selected").data('dish');
+		addToCart(merchant, dish);
 	});
+
 });
 
-function updateCart(){
-    $.ajax({
-       type: 'GET',
-       dataType: "json",
-       url: "https://delivery.com/customer/cart",
-       data: {
-           "order_type": "delivery"
-       },
-       headers:  {
-           "Authorization": $("#token").text()
-       },
-       success: function(data){
-           console.log(data);
-       }
-    });  
+function getFitbitData(){
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "https://nodeauthentication-kino6052.c9.io/fitbit/getData",
+		success: function(data){
+			console.log(data);
+			$("#weight").html("Your Weight: " + data.user.weight);
+		},
+		error: function(err){
+			console.log(err);
+		}
+	});
 }
 
 function getMerchantIds(){
@@ -39,57 +39,23 @@ $.ajax({
 		  url: "https://nodeauthentication-kino6052.c9.io/delivery/getLocalMerchants",
 		  data: {
 			client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl",
-			address: $("#location").text().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
+			address: "1178, Broadway 10001 New York".toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
 		  },
 		  success: function(data) {
 			cache = data;
 			$("#merchant_id").html("");
+			console.log(data);
+			$("#select-choice-c").html("");
 			$.each(data["merchants"], function(value){
-				$("#merchant_id").append("<p class='merchant'>" + data["merchants"][value]["id"] + "</p>");
+				$("#select-choice-c").append("<option class='merchant' id='" + data.merchants[value].id + "'>" + data["merchants"][value]['summary']["name"] + "</option>");
 			});
-			$(".merchant").click(function(){
-				getDishes($(this).text());
-			});
-			console.log("[STATUS] Success");
-			return data;
 			
+			console.log("[STATUS] Success");
 		  },
 		  error: function(data) {
 			console.log("[ERROR] " + data);
 		  }
 	});   
-}
-
-function getCuisines(){ // Called when press submit button
-	$.ajax({
-		  type: 'GET',
-		  dataType: "json",
-		  url: "https://api.delivery.com/merchant/search/delivery",
-		  
-		  data: {
-			client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl",
-			address: $("#location").text().toLowerCase().replace(/ /g, '-').replace(/[^\w]+/g,'+')
-		  },
-		  
-		  success: function(data) {
-			
-			cache = data;
-			$("#cuisines").html("");
-			$.each(data["cuisines"], function(value){
-				cuisineArray.push(data["cuisines"][value]["name"]);
-				$("#cuisines").append("<p class='type'>" + data["cuisines"][value]["name"] + "</p>");
-			});
-			$(".type").click(function(){
-				getDishes($(this).text());
-			});
-			console.log(data);
-			return data;
-			
-		  },
-		  error: function(data) {
-			console.log("ERROR: " + data);
-		  }
-	});
 }
 
 function recursiveSearch(iterable, callback){
@@ -100,36 +66,75 @@ function recursiveSearch(iterable, callback){
         });
     }
     else {
-        console.log(iterable);
         callback(iterable);
     }
 }
 
 function getCartContents(){
-    $.each(cart, function(value){
-       $.ajax({
-           type: "GET",
-           dataType: "json",
-           url: "https://nodeauthentication-kino6052.c9.io/delivery/getCartContents",
-           data: {
-               merchantId: cart[value],
-               client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl"
-           },
-           success: function(data){
-               console.log(data);
-               $.each(data.data.cart, function(value){
-                   $("#cart").append("<p>" + data.cart[value].name + "</p>");
-               });
-           },
-           error: function(err){
-               console.log(err);
-           }
-       });
-    });
+	$.ajax({
+		tye: "GET",
+		dataType: "json",
+		url: "https://nodeauthentication-kino6052.c9.io/delivery/getUserCart",
+		success: function(cart) {
+			$("#cart").html("");
+			$.each(cart, function(value){
+		       $.ajax({
+		           type: "GET",
+		           dataType: "json",
+		           url: "https://nodeauthentication-kino6052.c9.io/delivery/getCartContents",
+		           data: {
+		               merchantId: cart[value],
+		               client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl"
+		           },
+		           success: function(data){
+		               console.log(data);
+		               
+		               $.each(data.cart, function(value){
+		                   $("#cart").append("<li class='ui-li ui-li-static'>" + data.cart[value].name + "</li>");
+		               });
+		           },
+		           error: function(err){
+		               console.log(err);
+		           }
+		       });
+		    });
+		}
+	});
+    
+}
+
+function addToCart(merchantId, dishId){
+
+ $.ajax({
+    type: "POST",
+    url: "https://nodeauthentication-kino6052.c9.io/delivery/addToCart",
+    data: {
+      merchantId: merchantId,
+      "order_type": "delivery",
+      "instructions": "Some instructions",
+      headers: {
+        'Authorization': 'Bearer ' + $("#token").text()  
+      },
+      "item": {
+        "item_id": dishId,
+        "item_qty": 1
+      },
+      client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl"
+    },
+    
+    success: function(data){
+        $("#cart").html("");
+	    console.log(data);
+	    getCartContents(); 
+    },
+    error: function(err){
+        console.log(err);
+    }
+ });
 }
 
 function getDishes(merchantId){ // Called when you click on a cuisine name
-	$("#dishes").html(""); // Clear text from the dishes column in case there are any
+	
 	$.ajax({
 	    type: "GET",
 	    dataType: "json",
@@ -139,38 +144,15 @@ function getDishes(merchantId){ // Called when you click on a cuisine name
 	        client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl"
 	    },
 	    success: function(data){
+	      $("#select-choice-d").html(""); // Clear text from the dishes column in case there are any
 	      $.each(data.menu, function(menuIndex){
 	          recursiveSearch(data.menu[menuIndex], function(iterable){
-	              $("#dishes").append("<p class='add-to-cart' data-merchant=" + merchantId + " data-dish=" + iterable.id + ">" + iterable.name + "</p>");
+	              //$("#dishes").append("<p class='add-to-cart' data-merchant=" + merchantId + " data-dish=" + iterable.id + ">" + iterable.name + "</p>");
+	              $("#select-choice-d").append("<option class='add-to-cart' data-merchant='" + merchantId + "' data-dish='" + iterable.id + "'>" + iterable.name + "</option>");
 	          });
 	      });
 	      $(".add-to-cart").click(function(){
-	         var merchantId = $(this).data("merchant");
-	         var dishId = $(this).data("dish");
-	         $.ajax({
-	            type: "POST",
-	            url: "https://nodeauthentication-kino6052.c9.io/delivery/addToCart",
-	            data: {
-	              merchantId: merchantId,
-                  "order_type": "delivery",
-                  "instructions": "Some instructions",
-                  headers: {
-                    'Authorization': 'Bearer ' + $("#token").text()  
-                  },
-                  "item": {
-                    "item_id": dishId,
-                    "item_qty": 1
-                  },
-                  client_id: "Zjk0YzdhYzg3YTAyZmI1YTFkZjM0OGYyYWQwMDBmYzJl"
-                },
-                
-                success: function(data){
-                    cart.push(merchantId);
-                },
-                error: function(err){
-                    console.log(err);
-                }
-	         });
+	         
 	      });
 	      
 	      

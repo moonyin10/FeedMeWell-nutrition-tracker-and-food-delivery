@@ -1,9 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  div.loginbox
-      h2 Log In
-      a(href="./auth/google") Google
-      a(href="./auth/facebook") Facebook
-      
+  |<div data-role="page">
+  |<div data-role="header" data-position="fixed">
+  |<h1>eatbit</h1>
+  |</div><!-- /header -->
+  |<div data-role="content"> 
+  |<a data-role="button" onClick="window.location = 'https://nodeauthentication-kino6052.c9.io/auth/google'">Google+ Login</a>
+  |</div>  
+  |</div><!-- /page -->
