@@ -1,4 +1,15 @@
 # csci-3308-Project-GroupAwesome
+
+Project Name: FeedmeWell
+
+Project Description: 
+o Describe	repo	organization
+
+o Describe	where	to	find	and/or	how	to	build	the	docs
+
+o Describe	how	to	build/run/test/etc	code
+
+o If	using	a	CI	system,	provide	link	to	the	CI	status	page
 APIs:
 	https://www.nutritionix.com/ - Calorie APIs
 	https://api.delivery.com/ - Restaurants APIs
