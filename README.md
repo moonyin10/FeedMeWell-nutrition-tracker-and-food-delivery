@@ -8,14 +8,14 @@ This project is a food ordering app that can order food for user based on user's
 Deployment:
 Link: https://ide.c9.io/kino6052/nodeauthentication
 Instruction : 
-1. Follow the link
-2. Log into the cloud9
-3. Request Access
-4. Go to the terminal on the bottom (should say "Terminal", if not, click "+" to add new Terminal)
-5. In terminal, go to workspace directory and execute mongod-start (if you see errors, this is likely because mongod is already running)
-6. Then, go to temp and open app.js
-7. Press on the play button on the top of the screen
-8. 
+# Follow the link
+# Log into the cloud9
+# Request Access
+# Go to the terminal on the bottom (should say "Terminal", if not, click "+" to add new Terminal)
+# In terminal, go to workspace directory and execute mongod-start (if you see errors, this is likely because mongod is already running)
+# Then, go to temp and open app.js
+# Press on the play button on the top of the screen
+ 
 
 
 o Describe	repo	organization
