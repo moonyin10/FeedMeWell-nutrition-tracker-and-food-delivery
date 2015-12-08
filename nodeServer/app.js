@@ -105,7 +105,7 @@ passport.use(new GoogleStrategy({
                     // if the user isnt in our database, create a new user
 					/**
 					 * Create a new user if necessary.
-					 * @constructor
+					 * @var {object} newUser
 					 */
                     var newUser          = new User();
 
@@ -309,6 +309,7 @@ app.get('/auth/fitbit', function(req, res){
 
       // POSTing from the Server side
 	  /**
+	   * Posts from the server side requesting the needed information
 	   * @var {object} options
 	   */
       var options = {
@@ -347,7 +348,11 @@ app.get('/auth/fitbit', function(req, res){
 });
 
 // FITBIT GET DATA
-
+/**
+ * Gets the fitbit data using api calls.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get("/fitbit/getData", function(req, res){
   needle
     .get("https://api.fitbit.com/1/user/-/profile.json", {headers: {
@@ -378,6 +383,11 @@ app.get('/delivery/getLocalMerchants', function(req, res){
 });
 
 // GET MENUS FROM MERCHANTS
+/**
+ * Gets the food menus from the desired restaurant
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/delivery/getMenusFromMerchants', function(req, res){
   needle
     .get("https://api.delivery.com/merchant/" + req.query.merchantId + "/menu?client_id=" + req.query.client_id, 
@@ -390,11 +400,21 @@ app.get('/delivery/getMenusFromMerchants', function(req, res){
 });
 
 // GET USER CART
+/**
+ * Pulls up the user's cart.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/delivery/getUserCart', function(req, res){
   res.send(req.user.cart);
 });
 
 // GET CART CONTENTS
+/**
+ * Makes a request to delivery.com to bring up the contents of a specific user's cart.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/delivery/getCartContents', function(req, res){
   needle
     .get("https://api.delivery.com/customer/cart/" + req.query.merchantId + "?client_id=" + req.query.client_id, {headers: {"Authorization": req.user.tokens.delivery.access}},
@@ -407,6 +427,11 @@ app.get('/delivery/getCartContents', function(req, res){
 });
 
 // GET PAYMENT METHODS
+/**
+ * Makes a request to delivery.com to bring up payment options for the customer.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/delivery/getPaymentMethods', function(req, res){
   needle
     .get("https://api.delivery.com/customer/cc?client_id=" + req.query.client_id, {headers: {"Authorization": req.user.tokens.delivery.access}},
@@ -419,6 +444,11 @@ app.get('/delivery/getPaymentMethods', function(req, res){
 });
 
 // ADD ITEM TO CART
+/**
+ * An item is added to the cart and delivery.com recieves the info and updates the cart.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.post('/delivery/addToCart', function(req, res){
    var options = {
         headers: {
@@ -450,6 +480,11 @@ app.post('/delivery/addToCart', function(req, res){
 });
 
 // PLACE ORDER
+/**
+ * Using the deliuvery.com api a request with the information for the placed order is send.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.post('/delivery/placeOrder', function(req, res){
    var options = {
         headers: {
@@ -482,6 +517,11 @@ app.post('/delivery/placeOrder', function(req, res){
 /*
 *  Delivery Authentication
 */
+/**
+ * User credentials are verififed and an order is made.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
 app.get('/auth/delivery', function(req, res){
   if (req.query.code){ // about to request tokens
     try{
@@ -549,7 +589,12 @@ app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/',
                                       failureRedirect: '/login' }));
   
-app.get('/logout', function(req, res){
+/**
+ * The user is logged out through this process.
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ */
+  app.get('/logout', function(req, res){
   User.update({"google.id": req.user.google.id}, {$set:{"tokens.fitbit.access":""}}, function(err){
     console.log(err);
   });
@@ -563,6 +608,7 @@ app.get('/logout', function(req, res){
 /*
 *  CREATE HTTP SERVER
 */
+/** Creates an HTTP Server. */
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -570,6 +616,12 @@ http.createServer(app).listen(app.get('port'), function(){
 /* 
 *  VARIOUS FUNCTIONS
 */
+/**
+ * Checks if the user is logged in, if not the user is then redirected to where necessary
+ * @param {object} req - The requests for the needed credentials
+ * @param {object} res - Redirects to where necessary depending on the lack of credentials.
+ * @param {object} next - Returns the next user's information.
+ */
 function isLoggedIn(req, res, next) {
   console.log("isAuthenticated? " + req.isAuthenticated());
   if (req.isAuthenticated())
