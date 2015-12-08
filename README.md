@@ -17,18 +17,30 @@ Instruction :
 6. Then, go to temp and open app.js
 7. Press on the play button on the top of the screen
  
+## Repo Organization
+
+* Documentation
+  * This is where the auto-generated documentation .html files are found
+* database
+  * Folder containing UML diagram for the database organization.
+* nodeServer
+  * node.js server with project folders
+* node_modules
+  * jsdocs is found here
+* toolbox
+  * Folder with various code snippets used throughout our project
+* www
+  * PhoneGap project bones 
+
+## Running Tests
+
+1. Go to the "toolbox" folder
+2. Run apis.js
 
 
-o Describe	repo	organization
-
-o Describe	where	to	find	and/or	how	to	build	the	docs
-
-o Describe	how	to	build/run/test/etc	code
-
-o If	using	a	CI	system,	provide	link	to	the	CI	status	page
-APIs:
-	https://www.nutritionix.com/ - Calorie APIs
-	https://api.delivery.com/ - Restaurants APIs
+## APIs
+https://www.nutritionix.com/ - Calorie APIs
+https://api.delivery.com/ - Restaurants APIs
 
 ##Toolbox
 Folder that contains snippets that will be useful further in the project
