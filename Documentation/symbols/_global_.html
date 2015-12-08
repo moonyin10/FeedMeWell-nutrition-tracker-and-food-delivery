@@ -296,7 +296,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#addToCart">addToCart</a></b>(merchantId, dishId)
 								</div>
-								<div class="description">Add an item to your cart</div>
+								<div class="description">Asynchronous POST request is made to the /delivery/addToCart endpoint
+It passes merchant id and the dish id which the user selected to order.</div>
 							</td>
 						</tr>
 					
@@ -314,7 +315,9 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#getAccessTokenFitbit">getAccessTokenFitbit</a></b>()
 								</div>
-								<div class="description">Makes an API call to get an access token from the Fitbit website.</div>
+								<div class="description">Asynchronous POST request is made to the https://api.fitbit.com/oauth2/token endpoint
+It passes client id and grant type on success the token to access a particular user's fitbit data is returned 
+The response is then iterated and the option html elements get appended to the select element with id response.access_token</div>
 							</td>
 						</tr>
 					
@@ -323,7 +326,9 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#getCalories">getCalories</a></b>(name)
 								</div>
-								<div class="description">Called when you click on a dish name to get the calorie contents.</div>
+								<div class="description">Asynchronous GET request is made to the "https://api.nutritionix.com/v1_1/search/" endpoint
+It passes name which is just the name of the dish selected by the user to purchase
+The response is then iterated and the option html elements get appended to the select element with id "#calories".</div>
 							</td>
 						</tr>
 					
@@ -332,7 +337,9 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#getCartContents">getCartContents</a></b>()
 								</div>
-								<div class="description">Gets the contents of the users cart.</div>
+								<div class="description">Asynchronous GET request is made to the /delivery/getUserCart endpoint
+It passes merchant id which is selected through the user
+The response is then iterated and the option html elements get appended to the select element with id "#cart".</div>
 							</td>
 						</tr>
 					
@@ -341,7 +348,9 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#getDishes">getDishes</a></b>(merchantId)
 								</div>
-								<div class="description">Called when you click on a cuisine name to get the dishes.</div>
+								<div class="description">Asynchronous GET request is made to the /delivery/getMenusFromMerchants endpoint
+It passes merchant id which sends the relevant token to retrieve the dishes relevant to the merchantId
+The response is then iterated and the option html elements get appended to the select element with id "#select-choice-d".</div>
 							</td>
 						</tr>
 					
@@ -350,7 +359,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#getFitbitData">getFitbitData</a></b>()
 								</div>
-								<div class="description">Gets the fitbit data of a specific User.</div>
+								<div class="description">Makes a call to the fitbit website to retrieve user data.</div>
 							</td>
 						</tr>
 					
@@ -359,7 +368,9 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#getMerchantIds">getMerchantIds</a></b>()
 								</div>
-								<div class="description">Gets data of a selected food shop.</div>
+								<div class="description">Asynchronous GET request is made to the /delivery/getLocalMerchants endpoint
+It passes client id and the user's location, on success response it returns the ids of all nearby restaurants
+The response is then iterated and the option html elements get appended to the select element with id "#select-choice-c".</div>
 							</td>
 						</tr>
 					
@@ -377,7 +388,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#recursiveSearch">recursiveSearch</a></b>(iterable, callback)
 								</div>
-								<div class="description">Searches recursively for the right child's data</div>
+								<div class="description">When a request is made from the console, to retrieve particular information regarding one of the children.</div>
 							</td>
 						</tr>
 					
@@ -482,7 +493,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Sets the state of the lock.
+						Sets the state of the lock. Initially at null.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/app.js.html">app.js</a>.
@@ -515,7 +526,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Add an item to your cart
+						Asynchronous POST request is made to the /delivery/addToCart endpoint
+It passes merchant id and the dish id which the user selected to order.
+The response is then iterated and the option html elements get appended to the select element with id "#token".
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -561,6 +574,7 @@ ul.inheritsList
 					</div>
 					<div class="description">
 						Makes an API call to check on the authenticity of the request being made.
+When the token is determined to be authentic it's returned with the relevant authorization code grant
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/fitbitAuthorizationCodeGrant.js.html">fitbitAuthorizationCodeGrant.js</a>.
@@ -588,7 +602,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Makes an API call to get an access token from the Fitbit website.
+						Asynchronous POST request is made to the https://api.fitbit.com/oauth2/token endpoint
+It passes client id and grant type on success the token to access a particular user's fitbit data is returned 
+The response is then iterated and the option html elements get appended to the select element with id response.access_token
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/fitbitAuthorizationCodeGrant.js.html">fitbitAuthorizationCodeGrant.js</a>.
@@ -616,7 +632,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Called when you click on a dish name to get the calorie contents.
+						Asynchronous GET request is made to the "https://api.nutritionix.com/v1_1/search/" endpoint
+It passes name which is just the name of the dish selected by the user to purchase
+The response is then iterated and the option html elements get appended to the select element with id "#calories".
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -655,7 +673,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Gets the contents of the users cart.
+						Asynchronous GET request is made to the /delivery/getUserCart endpoint
+It passes merchant id which is selected through the user
+The response is then iterated and the option html elements get appended to the select element with id "#cart".
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -683,7 +703,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Called when you click on a cuisine name to get the dishes.
+						Asynchronous GET request is made to the /delivery/getMenusFromMerchants endpoint
+It passes merchant id which sends the relevant token to retrieve the dishes relevant to the merchantId
+The response is then iterated and the option html elements get appended to the select element with id "#select-choice-d".
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -722,7 +744,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Gets the fitbit data of a specific User.
+						Makes a call to the fitbit website to retrieve user data. Upon success to the data object the user's weight is added.
+If there can't be a connection made with the fitbit website or the user is not registered an error is returned.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -750,7 +773,9 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Gets data of a selected food shop.
+						Asynchronous GET request is made to the /delivery/getLocalMerchants endpoint
+It passes client id and the user's location, on success response it returns the ids of all nearby restaurants
+The response is then iterated and the option html elements get appended to the select element with id "#select-choice-c".
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -779,6 +804,7 @@ ul.inheritsList
 					</div>
 					<div class="description">
 						Function that extracts paramaters from url, ex: 10 will extract 10 and so on.
+e.g. url.html?parameter=10, it will extract 10 from parameter
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/fitbitAuthorizationCodeGrant.js.html">fitbitAuthorizationCodeGrant.js</a>.
@@ -817,7 +843,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Searches recursively for the right child's data
+						When a request is made from the console, to retrieve particular information regarding one of the children.
+If the length of the child is greater than 0 than values of the children are iterated and the value of the child is returned.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/apis.js.html">apis.js</a>.
@@ -866,7 +893,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Dec 07 2015 20:43:28 GMT-0700 (MST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Dec 07 2015 22:01:05 GMT-0700 (MST)
 		</div>
 	</body>
 </html>
